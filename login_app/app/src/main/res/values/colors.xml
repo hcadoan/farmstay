@@ -8,4 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="farmstay">#0A986B</color>
+    <color name="farmstay2">#0BD696</color>
+    <color name="farmstay3">#68E7BF</color>
 </resources>
