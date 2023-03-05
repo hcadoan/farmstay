@@ -8,6 +8,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.lzyzsd.circleprogress.CircleProgress;
+import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -45,16 +48,14 @@ import retrofit2.Response;
  */
 public class FarmFragment extends Fragment {
 
-    private TextView tempTextView;
-    private TextView humiTextView;
-    private TextView moisTextView;
-    private TextView waterTextView;
+    private TextView tvCreenSoil, tvCreenWater, tvValueSoil, tvValueWater;
     private Timer timer;
+    private DonutProgress donutProgressTemp, donutProgressHumi, donutProgressSoil;
+    private CircleProgress circleProgressWater;
 
     private List<Notification_model> listNotify;
     SharedPreferences sharedPreferences;
 
-    public static final String CHANNEL_ID = "farmstay";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -102,10 +103,14 @@ public class FarmFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_farm, container, false);
 
-        tempTextView = view.findViewById(R.id.textViewTemp);
-        humiTextView = view.findViewById(R.id.textViewHumi);
-        moisTextView = view.findViewById(R.id.tvMoisture);
-        waterTextView = view.findViewById(R.id.tvWaterlevel);
+        donutProgressTemp = view.findViewById(R.id.circleProgressTemp);
+        donutProgressHumi = view.findViewById(R.id.circleProgressHumi);
+        tvCreenSoil = view.findViewById(R.id.tvCreenSoil);
+        tvCreenWater = view.findViewById(R.id.tvCreenWater);
+        tvValueSoil = view.findViewById(R.id.tvValueSoil);
+        tvValueWater = view.findViewById(R.id.tvValueWater);
+        circleProgressWater = view.findViewById(R.id.circleProgressWater);
+        donutProgressSoil = view.findViewById(R.id.circleProgressSoil);
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -113,7 +118,7 @@ public class FarmFragment extends Fragment {
             public void run() {
                 getLatestSensorData();
             }
-        }, 0, 1000);  // update every 1000 milliseconds (1 second)
+        }, 0, 5000);  // update every 1000 milliseconds (1 second)
 
         return view;
     }
@@ -121,30 +126,6 @@ public class FarmFragment extends Fragment {
     private void getLatestSensorData() {
         RetrofitServer retrofitServer = new RetrofitServer();
         RetrofitInterface sensorDataService = retrofitServer.Retrofit();
-
-        // Lấy thời gian hiện tại
-        Calendar calendar = Calendar.getInstance();
-
-        // Đặt giờ, phút cho thời gian hiện tại
-        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
-
-        // Lấy giờ, phút của thời gian hiện tại
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-
-        // Đặt ngày, tháng và năm cho ngày hiện tại
-        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
-        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
-
-        // Lấy ngày, tháng và năm của ngày hiện tại
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-        String time = String.format("%02d:%02d", hour, minute); // định dạng giờ:phút
-        String date = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year); // định dạng ngày/tháng/năm
 
         //Nhietdo------------------------------------------
         Call<List<SensorResuilt>> callTemp = sensorDataService.getLatestTempData();
@@ -154,7 +135,8 @@ public class FarmFragment extends Fragment {
                 List<SensorResuilt> sensorDataList = response.body();
                 if (sensorDataList != null && !sensorDataList.isEmpty()) {
                     SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-                    tempTextView.setText(String.valueOf(latestSensorData.getValue()));
+                    donutProgressTemp.setProgress(Float.parseFloat(latestSensorData.getValue()));
+                    donutProgressTemp.setSuffixText("°C");
                 }
             }
 
@@ -172,7 +154,8 @@ public class FarmFragment extends Fragment {
                 List<SensorResuilt> sensorDataList = response.body();
                 if (sensorDataList != null && !sensorDataList.isEmpty()) {
                     SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-                    humiTextView.setText(String.valueOf(latestSensorData.getValue()));
+                    donutProgressHumi.setProgress(Float.parseFloat(latestSensorData.getValue()));
+                    donutProgressHumi.setSuffixText("%");
                 }
             }
 
@@ -183,8 +166,7 @@ public class FarmFragment extends Fragment {
             }
         });
 
-        //Độ ẩm đất------------------------------------------
-
+        //do am dat
         Call<List<SensorResuilt>> callMois = sensorDataService.getLatestMoisData();
         callMois.enqueue(new Callback<List<SensorResuilt>>() {
             @Override
@@ -192,62 +174,29 @@ public class FarmFragment extends Fragment {
                 List<SensorResuilt> sensorDataList = response.body();
                 if (sensorDataList != null && !sensorDataList.isEmpty()) {
                     SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-                    moisTextView.setText(String.valueOf(latestSensorData.getValue()));
+                    String moisSensor = latestSensorData.getValue();
+                    tvValueSoil.setText(moisSensor);
+                    donutProgressSoil.setProgress(Float.parseFloat(moisSensor));
+                    donutProgressSoil.setSuffixText("%");
+
                     Handler handler = new Handler();
-                    if (Double.parseDouble(latestSensorData.getValue()) < 30.0) {
-                        NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
-                        int notificationId = 1;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "My Channel", NotificationManager.IMPORTANCE_HIGH);
-                            channel.setDescription("My channel description");
-                            notificationManager.createNotificationChannel(channel);
-                        }
-                        Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
-                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.ic_notifications)
-                                .setContentTitle("Warning Farm")
-                                .setContentText("Low Soil Moisture")
-                                .setContentIntent(pendingIntent)
-                                .setAutoCancel(true)
-                                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .setDefaults(Notification.DEFAULT_ALL);
-
-                        // Delay 3 seconds before showing the notification
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                notificationManager.notify(notificationId, builder.build());
-                            }
-                        }, 3000);
-
-                        //test
-                        listNotify = new ArrayList<>();
-                        listNotify.add(new Notification_model(2,"Warning","Low Soil Moisture",time,date));
-
-                        sharedPreferences = getActivity().getSharedPreferences("SaveInfo",MODE_PRIVATE);
-
-                        // Chuyển đổi danh sách thành chuỗi JSON
-                        Gson gson = new Gson();
-                        String json = gson.toJson(listNotify);
-
-                        // Lưu chuỗi JSON vào SharedPreferences
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("notifySoil", json);
-                        editor.commit();
+                    if (Double.parseDouble(latestSensorData.getValue()) < 50.0) {
+                        tvCreenSoil.setText(R.string.lowSoil);
+                        tvCreenSoil.setTextColor(Color.parseColor("#F44336"));
+                        donutProgressSoil.setFinishedStrokeColor(Color.RED);
+                    } else {
+                        tvCreenSoil.setText(R.string.soilIsNormal);
+                        tvCreenSoil.setTextColor(Color.WHITE);
+                        donutProgressSoil.setFinishedStrokeColor(Color.BLUE);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<List<SensorResuilt>> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(),
-                        Toast.LENGTH_LONG).show();
+
             }
         });
-
 
         //Mực nước ---------------------------------
         Call<List<SensorResuilt>> callWater = sensorDataService.getLatestwaterlevelData();
@@ -257,60 +206,33 @@ public class FarmFragment extends Fragment {
                 List<SensorResuilt> sensorDataList = response.body();
                 if (sensorDataList != null && !sensorDataList.isEmpty()) {
                     SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-                    waterTextView.setText(String.valueOf(latestSensorData.getValue()));
+                    String waterSensor = latestSensorData.getValue();
+                    tvValueWater.setText(waterSensor);
+                    circleProgressWater.setProgress(Integer.parseInt(waterSensor));
+                    circleProgressWater.setSuffixText("mm");
+
                     Handler handler = new Handler();
-                    if (Double.parseDouble(latestSensorData.getValue()) < 400) {
-                        NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
-                        int notificationId = 1;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "My Channel", NotificationManager.IMPORTANCE_HIGH);
-                            channel.setDescription("My channel description");
-                            notificationManager.createNotificationChannel(channel);
-                        }
-                        Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
-                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.ic_notifications)
-                                .setContentTitle("Warning Farm")
-                                .setContentText("Low Water Level")
-                                .setContentIntent(pendingIntent)
-                                .setAutoCancel(true)
-                                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .setDefaults(Notification.DEFAULT_ALL);
-
-                        // Delay 3 seconds before showing the notification
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                notificationManager.notify(notificationId, builder.build());
-                            }
-                        }, 3000);
-
-                        //test
-                        listNotify = new ArrayList<>();
-                        listNotify.add(new Notification_model(2,"Warning","Low Water Level",time,date));
-
-                        sharedPreferences = getActivity().getSharedPreferences("SaveInfo",MODE_PRIVATE);
-
-                        // Chuyển đổi danh sách thành chuỗi JSON
-                        Gson gson = new Gson();
-                        String json = gson.toJson(listNotify);
-
-                        // Lưu chuỗi JSON vào SharedPreferences
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("notifyWater", json);
-                        editor.commit();
+                    if (Double.parseDouble(latestSensorData.getValue()) < 500) {
+                        tvCreenWater.setText(R.string.lowWater);
+                        tvCreenWater.setTextColor(Color.parseColor("#F44336"));
+                        circleProgressWater.setFinishedColor(Color.parseColor("#F44336"));
+                    } else if (Double.parseDouble(latestSensorData.getValue()) > 1000) {
+                        tvCreenWater.setText(R.string.highWater);
+                        tvCreenWater.setTextColor(Color.parseColor("#F44336"));
+                        circleProgressWater.setFinishedColor(Color.parseColor("#F44336"));
+                    } else {
+                        tvCreenWater.setText(R.string.waterIsNormal);
+                        tvCreenWater.setTextColor(Color.WHITE);
+                        circleProgressWater.setFinishedColor(Color.BLUE);
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<List<SensorResuilt>> call, Throwable t) {
-                Toast.makeText(getActivity(), t.getMessage(),
-                        Toast.LENGTH_LONG).show();
+
             }
         });
+
     }
 }

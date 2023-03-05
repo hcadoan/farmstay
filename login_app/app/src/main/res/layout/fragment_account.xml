@@ -23,7 +23,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="1000dp">
+                android:layout_height="1500dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
@@ -52,7 +52,7 @@
                         android:id="@+id/tvUser"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="( user )"
+                        android:text="@string/user"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="22sp"
@@ -101,12 +101,12 @@
                             android:background="@drawable/bg_icon_1"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="3dp">
+                            android:padding="5dp">
 
                             <ImageView
                                 android:id="@+id/imageView3"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="15dp"
                                 android:scaleType="fitXY"
@@ -116,10 +116,10 @@
                                 android:id="@+id/textView3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Setting"
+                                android:text="@string/setting"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -132,12 +132,12 @@
                             android:background="@drawable/bg_icon_1"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="3dp">
+                            android:padding="5dp">
 
                             <ImageView
                                 android:id="@+id/imageView4"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="15dp"
                                 android:scaleType="fitXY"
@@ -147,10 +147,10 @@
                                 android:id="@+id/textView4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Contact"
+                                android:text="@string/contact"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -163,12 +163,12 @@
                             android:background="@drawable/bg_icon_1"
                             android:gravity="center"
                             android:orientation="vertical"
-                            android:padding="3dp">
+                            android:padding="5dp">
 
                             <ImageView
                                 android:id="@+id/imageView5"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="15dp"
                                 android:scaleType="fitXY"
@@ -178,10 +178,10 @@
                                 android:id="@+id/textView5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Edit"
+                                android:text="@string/edit"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
-                                android:textSize="18sp"
+                                android:textSize="16sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -203,7 +203,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:text="Email"
+                            android:text="@string/emailAddress"
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -235,7 +235,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:text="Phone"
+                            android:text="@string/phoneNumber"
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -267,7 +267,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:text="Address"
+                            android:text="@string/address"
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -300,7 +300,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:text="Gender"
+                            android:text="@string/gender"
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -333,7 +333,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
-                            android:text="Birthday"
+                            android:text="@string/birthday"
                             android:textColor="@color/black"
                             android:textSize="20sp"
                             android:textStyle="bold" />
@@ -359,7 +359,7 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="30dp"
                     android:background="@drawable/bg_button"
-                    android:text="LOG OUT"
+                    android:text="@string/logout"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"

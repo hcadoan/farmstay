@@ -32,7 +32,6 @@ import model.Notification_model;
 public class NotificationFragment extends Fragment {
 
     private NotificationAdapter notificationAdapter;
-    private List<Notification_model> listNotify;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,7 +86,7 @@ public class NotificationFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("SaveInfo", Context.MODE_PRIVATE);
 
         // Đọc chuỗi JSON từ SharedPreferences
-        String json = sharedPreferences.getString("notify", "");
+        String json = sharedPreferences.getString("notifytest", "");
         String json2 = sharedPreferences.getString("notifySoil", "");
         String json3 = sharedPreferences.getString("notifyWater", "");
 
@@ -119,7 +118,10 @@ public class NotificationFragment extends Fragment {
         }
 
         notificationAdapter = new NotificationAdapter(getActivity(), listNotify);
-        lvNotify.setAdapter(notificationAdapter);
+        // Kiểm tra listNotify trước khi hiển thị lên ListView
+        if (listNotify != null && !listNotify.isEmpty()) {
+            lvNotify.setAdapter(notificationAdapter);
+        }
         notificationAdapter.notifyDataSetChanged();
 
         ArrayList<Notification_model> finalListNotify = listNotify;
@@ -129,8 +131,11 @@ public class NotificationFragment extends Fragment {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 if(!finalListNotify.isEmpty()) {
                     editor.remove("notify");
+                    editor.remove("notifySoil");
+                    editor.remove("notifyWater");
                     editor.commit();
                     finalListNotify.clear();
+                    lvNotify.setAdapter(null); // Xóa ListView nếu danh sách rỗng
                     notificationAdapter.notifyDataSetChanged();
                 }
             }

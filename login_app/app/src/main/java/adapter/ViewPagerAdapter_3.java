@@ -1,5 +1,6 @@
 package adapter;
 
+import android.content.Context;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
@@ -10,12 +11,15 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.login_app.FarmFragment;
 import com.example.login_app.HouseFragment;
+import com.example.login_app.R;
 
 public class ViewPagerAdapter_3 extends FragmentStatePagerAdapter {
 
+    private Context mContext;
 
-    public ViewPagerAdapter_3(@NonNull FragmentManager fm, int behavior) {
+    public ViewPagerAdapter_3(@NonNull Context context, FragmentManager fm, int behavior) {
         super(fm, behavior);
+        mContext = context;
     }
 
     @NonNull
@@ -42,10 +46,10 @@ public class ViewPagerAdapter_3 extends FragmentStatePagerAdapter {
         String title = "";
         switch(position){
             case 0:
-                title = "Home";
+                title = mContext.getString(R.string.home1);
                 break;
             case 1:
-                title = "Farm";
+                title = mContext.getString(R.string.farm);
                 break;
         }
         return title;

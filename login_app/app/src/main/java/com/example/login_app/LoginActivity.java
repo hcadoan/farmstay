@@ -1,38 +1,48 @@
 package com.example.login_app;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Dialog;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
 
 import model.LoginResult;
 import model.RetrofitInterface;
 import model.RetrofitServer;
-import model.SensorResuilt;
+
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,13 +50,26 @@ public class LoginActivity extends AppCompatActivity {
     Button loginBtn, signupBtn;
     TextView forgotPassword;
     CheckBox cbSave;
+    LinearLayout layoutLanguage;
+    ImageView imLanguage;
 
     SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Thiết lập Activity fullscreen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        String lang = getLanguage();
+        setLocale(lang);
+
         setContentView(R.layout.activity_login);
+
+        ((MyApplication) getApplicationContext()).addActivity(this);
 
         emailText = findViewById(R.id.email);
         passwordText = findViewById(R.id.password);
@@ -54,6 +77,8 @@ public class LoginActivity extends AppCompatActivity {
         signupBtn = findViewById(R.id.signupBtn);
         forgotPassword = findViewById(R.id.forgotPassword);
         cbSave = findViewById(R.id.cbSave);
+        imLanguage = findViewById(R.id.imLanguage);
+        layoutLanguage = findViewById(R.id.layoutLanguage);
 
         RetrofitServer retrofitServer = new RetrofitServer();
         RetrofitInterface retrofitInterface = retrofitServer.Retrofit();
@@ -68,6 +93,59 @@ public class LoginActivity extends AppCompatActivity {
         emailText.setText(sharedPreferences.getString("email",""));
         passwordText.setText(sharedPreferences.getString("password",""));
         cbSave.setChecked(sharedPreferences.getBoolean("check", false));
+
+        String langCreen = sharedPreferences.getString("lang", "");
+        switch (langCreen){
+            case "English":
+                imLanguage.setImageResource(R.drawable.anh);
+                break;
+            case "Vietnamese":
+                imLanguage.setImageResource(R.drawable.vietnam);
+                break;
+            default:
+                imLanguage.setImageResource(R.drawable.anh);
+                break;
+        }
+
+        layoutLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialogLanguage();
+            }
+        });
+
+        DrawableClickListener clickListener = new DrawableClickListener() {
+            public void onClick(DrawablePosition target) {
+                if (target == DrawablePosition.RIGHT) {
+                    Drawable[] drawables = passwordText.getCompoundDrawablesRelative();
+                    Drawable drawable = getResources().getDrawable(R.drawable.ic_visibility);
+                    Drawable drawable2 = getResources().getDrawable(R.drawable.ic_visibility_off);
+                    if (passwordText.getTransformationMethod() instanceof PasswordTransformationMethod) {
+                        passwordText.setTransformationMethod(null);
+                        drawables[2] = drawable;
+                    } else {
+                        passwordText.setTransformationMethod(new PasswordTransformationMethod());
+                        drawables[2] = drawable2;
+                    }
+                    passwordText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawables[0], drawables[1], drawables[2], drawables[3]);
+
+                }
+            }
+        };
+
+        passwordText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (passwordText.getCompoundDrawables()[2] != null) {
+                    boolean tapped = event.getX() > (passwordText.getWidth() - passwordText.getPaddingRight() - passwordText.getCompoundDrawables()[2].getIntrinsicWidth());
+                    if (tapped) {
+                        clickListener.onClick(DrawableClickListener.DrawablePosition.RIGHT);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,11 +163,35 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //kiem tra thoi han token va cho phep dang nhap
+        String token = sharedPreferences.getString("token","");
+        Call<LoginResult> call = retrofitInterface.Logout(token);
+
+        if (token != null){
+            call.enqueue(new Callback<LoginResult>() {
+                @Override
+                public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+                    if(response.code() == 200){
+                        Intent intent = new Intent(LoginActivity.this,DashboardActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<LoginResult> call, Throwable t) {
+                    Toast.makeText(LoginActivity.this, t.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = emailText.getText().toString();
                 String password = passwordText.getText().toString();
+
 
                 if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
                     View view1 = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
@@ -117,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     HashMap<String, String> map = new HashMap<>();
 
-                    map.put("email", email);
+                    map.put("login", email);
                     map.put("password", password);
 
                     Call<LoginResult> call = retrofitInterface.executeLogin(map);
@@ -125,44 +227,84 @@ public class LoginActivity extends AppCompatActivity {
                     call.enqueue(new Callback<LoginResult>() {
                         @Override
                         public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
-                            if (response.code() == 200) {
 
+                            if (response.code() == 200) {
                                 LoginResult result = response.body();
-                                String name2 = result.getName().toString();
-                                String email2 = result.getEmail().toString();
+                                String token = result.getAuthenticate_jwt();
+                                String mes = result.getMsg();
+                                String msg_vi = result.getMsg_vi();
 
                                 View view = inflater.inflate(R.layout.layout_toast_success, (ViewGroup) findViewById(R.id.Layout_toast));
                                 TextView tvMessege = view.findViewById(R.id.tvMessege1);
-                                tvMessege.setText("Log In Success");
+                                tvMessege.setText(R.string.loginSuccessfully);
                                 toast.setView(view);
                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.setDuration(Toast.LENGTH_LONG);
                                 toast.show();
 
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString("name2", name2);
-                                editor.putString("email2", email2);
-                                editor.putString("password2", password);
+                                editor.putString("token", token);
                                 editor.commit();
                                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                 startActivity(intent);
 
-                            } else if (response.code() == 404) {
-                                View view = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
-                                TextView tvMessege = view.findViewById(R.id.tvMessege2);
-                                tvMessege.setText("Email is not registered");
-                                toast.setView(view);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.setDuration(Toast.LENGTH_LONG);
-                                toast.show();
+                            } else if (response.code() == 400) {
+
+                                try {
+                                    LoginResult result = new Gson().fromJson(response.errorBody().string(), LoginResult.class);
+                                    // do something with the result
+                                    String mes = result.getMsg();
+
+                                    View view1 = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
+                                    TextView tvMessege = view1.findViewById(R.id.tvMessege2);
+                                    tvMessege.setText(R.string.passwordLenght);
+                                    toast.setView(view1);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.show();
+
+                                } catch (IOException e) {
+                                    // handle the exception, such as logging or displaying an error message
+                                }
+
                             } else if (response.code() == 401) {
-                                View view = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
-                                TextView tvMessege = view.findViewById(R.id.tvMessege2);
-                                tvMessege.setText("Wrong password");
-                                toast.setView(view);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.setDuration(Toast.LENGTH_LONG);
-                                toast.show();
+
+                                try {
+                                    LoginResult result = new Gson().fromJson(response.errorBody().string(), LoginResult.class);
+                                    // do something with the result
+                                    String mes = result.getMsg();
+
+                                    View view1 = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
+                                    TextView tvMessege = view1.findViewById(R.id.tvMessege2);
+                                    tvMessege.setText(R.string.wrongPassword);
+                                    toast.setView(view1);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.show();
+
+                                } catch (IOException e) {
+                                    // handle the exception, such as logging or displaying an error message
+                                }
+
+                            } else if (response.code() == 500) {
+
+                                try {
+                                    LoginResult result = new Gson().fromJson(response.errorBody().string(), LoginResult.class);
+                                    // do something with the result
+                                    String mes = result.getMsg();
+
+                                    View view1 = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
+                                    TextView tvMessege = view1.findViewById(R.id.tvMessege2);
+                                    tvMessege.setText(mes);
+                                    toast.setView(view1);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.show();
+
+                                } catch (IOException e) {
+                                    // handle the exception, such as logging or displaying an error message
+                                }
+
                             }
                         }
 
@@ -175,5 +317,56 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public interface DrawableClickListener {
+        enum DrawablePosition { TOP, BOTTOM, LEFT, RIGHT };
+        void onClick(DrawablePosition target);
+    }
+
+    private void showDialogLanguage() {
+        final String[] listItem = {"English","Vietnamese"};
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
+        mBuilder.setTitle("Chose Language");
+        mBuilder.setSingleChoiceItems(listItem, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(i == 0){
+                    setLocale("en");
+                    SharedPreferences.Editor editor = getSharedPreferences("SaveInfo", MODE_PRIVATE).edit();
+                    editor.putString("lang","English");
+                    editor.apply();
+                    ((MyApplication) getApplicationContext()).recreateAll();
+                } else {
+                    setLocale("vi");
+                    SharedPreferences.Editor editor = getSharedPreferences("SaveInfo", MODE_PRIVATE).edit();
+                    editor.putString("lang","Vietnamese");
+                    editor.apply();
+                    ((MyApplication) getApplicationContext()).recreateAll();
+                }
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+
+    }
+
+    public void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
+        SharedPreferences.Editor editor = getSharedPreferences("SaveInfo", MODE_PRIVATE).edit();
+        editor.putString("language",lang);
+        editor.apply();
+    }
+
+    public String getLanguage() {
+        SharedPreferences preferences = getSharedPreferences("SaveInfo", Activity.MODE_PRIVATE);
+        return preferences.getString("language", "");
     }
 }

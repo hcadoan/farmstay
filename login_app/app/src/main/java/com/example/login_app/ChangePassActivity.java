@@ -12,13 +12,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ChangePassActivity extends AppCompatActivity {
+public class ChangePassActivity extends BaseActivity {
 
     EditText etCurrentPass, etNewpass, etComfirmPass;
     TextView tvError, tvError2;
@@ -30,6 +32,10 @@ public class ChangePassActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Thiết lập Activity fullscreen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_change_pass);
 
         etCurrentPass = findViewById(R.id.etCurrentPass);
@@ -49,7 +55,9 @@ public class ChangePassActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ChangePassActivity.this, SettingActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -69,7 +77,7 @@ public class ChangePassActivity extends AppCompatActivity {
                 String newPass = etNewpass.getText().toString().trim();
                 if (newPass.length() < 6) {
                     tvError.setVisibility(View.VISIBLE);
-                    tvError.setText("Password must be 6 characters");
+                    tvError.setText(R.string.passwordmustbe6characters);
                     return;
                 } else {
                     tvError.setVisibility(View.GONE);
@@ -94,7 +102,7 @@ public class ChangePassActivity extends AppCompatActivity {
                 String newPass = etNewpass.getText().toString().trim();
                 if (!comfirmPass.equals(newPass)) {
                     tvError2.setVisibility(View.VISIBLE);
-                    tvError2.setText("Password not match");
+                    tvError2.setText(R.string.passwordnotmatch);
                     return;
                 } else {
                     tvError2.setVisibility(View.GONE);

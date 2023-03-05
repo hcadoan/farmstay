@@ -18,9 +18,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,10 +60,11 @@ public class HouseFragment extends Fragment {
     private Timer timer;
     private ImageView mImageView, imLamp1, imLamp2, imLamp3;
     private ConstraintLayout mLayout;
-    private TextView warningTextView;
+    private TextView warningTextView, tvTemp, tvHumi;
     private SwitchCompat switch1;
     private SwitchCompat switch2;
     private SwitchCompat switch3;
+    private Button switch4, switch5;
 
     private List<Notification_model> listNotify;
     SharedPreferences sharedPreferences;
@@ -120,6 +123,8 @@ public class HouseFragment extends Fragment {
         imLamp1 = view.findViewById(R.id.ImLamp1);
         imLamp2 = view.findViewById(R.id.ImLamp2);
         imLamp3 = view.findViewById(R.id.ImLamp3);
+        tvTemp = view.findViewById(R.id.tvTemp);
+        tvHumi = view.findViewById(R.id.tvHumi);
 
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -127,7 +132,7 @@ public class HouseFragment extends Fragment {
             public void run() {
                 getLatestSensorData();
             }
-        }, 0, 1000);  // update every 1000 milliseconds (1 second)
+        }, 0, 5000);  // update every 1000 milliseconds (1 second)
 
         RetrofitServer2 retrofitServer2 = new RetrofitServer2();
         RelayApi relayApi = retrofitServer2.Retrofit();
@@ -223,86 +228,117 @@ public class HouseFragment extends Fragment {
             }
         });
 
+        switch4 = view.findViewById(R.id.btnLampOFF);
+        switch4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Gửi yêu cầu tắt đến tất cả các kênh relay
+                for (int channel = 1; channel <= 3; channel++) {
+                    Call<ResponseBody> call = relayApi.setRelayState(channel, 0);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            try {
+                                String message = response.body().string();
+                                // Xử lý kết quả trả về từ server
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            // Xử lý lỗi
+                        }
+                    });
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch1.setChecked(false);
+                        switch2.setChecked(false);
+                        switch3.setChecked(false);
+                    }
+                }, 1000);
+            }
+        });
+
+        switch5 = view.findViewById(R.id.btnLampON);
+        switch5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Gửi yêu cầu tắt đến tất cả các kênh relay
+                for (int channel = 1; channel <= 3; channel++) {
+                    Call<ResponseBody> call = relayApi.setRelayState(channel, 1);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            try {
+                                String message = response.body().string();
+                                // Xử lý kết quả trả về từ server
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            // Xử lý lỗi
+                        }
+                    });
+                }
+                // Tự động tắt switch
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        switch1.setChecked(true);
+                        switch2.setChecked(true);
+                        switch3.setChecked(true);
+                    }
+                }, 1000);
+            }
+        });
+
         return view;
     }
 
     private void getLatestSensorData() {
         RetrofitServer retrofitServer = new RetrofitServer();
-        RetrofitInterface retrofitInterface = retrofitServer.Retrofit();
+        RetrofitInterface sensorDataService = retrofitServer.Retrofit();
 
-        Call<List<SensorResuilt>> callfire = retrofitInterface.getLatestfireData();
+        //bao chay
+        Call<List<SensorResuilt>> callfire = sensorDataService.getLatestfireData();
         callfire.enqueue(new Callback<List<SensorResuilt>>() {
             @Override
             public void onResponse(Call<List<SensorResuilt>> call, Response<List<SensorResuilt>> response) {
                 List<SensorResuilt> sensorDataList = response.body();
                 if (sensorDataList != null && !sensorDataList.isEmpty()) {
                     SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-//                    fireTextView.setText(String.valueOf(latestSensorData.getValue()));
-                    if (latestSensorData.getValue().equals("1")) {
+                    String fireSensor = latestSensorData.getValue();
+
+                    if (fireSensor.equals("1")) {
                         mLayout.setBackgroundResource(R.drawable.bg_icon_red);
-                        warningTextView.setVisibility(View.VISIBLE);
-                        NotificationManager notificationManager = getContext().getSystemService(NotificationManager.class);
-                        int notificationId = 1;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "My Channel", NotificationManager.IMPORTANCE_HIGH);
-                            channel.setDescription("My channel description");
-                            notificationManager.createNotificationChannel(channel);
-                        }
-                        Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
-                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.ic_warning)
-                                .setContentTitle("Warning")
-                                .setContentText("Fire alarm in your farmstay area")
-                                .setContentIntent(pendingIntent)
-                                .setAutoCancel(true)
-                                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .setDefaults(Notification.DEFAULT_ALL);
-
-                        notificationManager.notify(notificationId, builder.build());
-
-                        // Lấy thời gian hiện tại
-                        Calendar calendar = Calendar.getInstance();
-
-                        // Đặt giờ, phút cho thời gian hiện tại
-                        calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
-                        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
-
-                        // Lấy giờ, phút của thời gian hiện tại
-                        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = calendar.get(Calendar.MINUTE);
-
-                        // Đặt ngày, tháng và năm cho ngày hiện tại
-                        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
-                        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
-                        calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH));
-
-                        // Lấy ngày, tháng và năm của ngày hiện tại
-                        int year = calendar.get(Calendar.YEAR);
-                        int month = calendar.get(Calendar.MONTH);
-                        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-                        String time = String.format("%02d:%02d", hour, minute); // định dạng giờ:phút
-                        String date = String.format("%02d/%02d/%d", dayOfMonth, month + 1, year); // định dạng ngày/tháng/năm
-                        //test
-                        listNotify = new ArrayList<>();
-                        listNotify.add(new Notification_model(2,"Warning","Fire alarm in your farmstay area",time,date));
-
-                        sharedPreferences = getActivity().getSharedPreferences("SaveInfo",MODE_PRIVATE);
-
-                        // Chuyển đổi danh sách thành chuỗi JSON
-                        Gson gson = new Gson();
-                        String json = gson.toJson(listNotify);
-
-                        // Lưu chuỗi JSON vào SharedPreferences
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("notify", json);
-                        editor.commit();
                     } else {
                         mLayout.setBackgroundResource(R.drawable.bg_icon_2);
                     }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SensorResuilt>> call, Throwable t) {
+
+            }
+        });
+
+        //Nhietdo------------------------------------------
+        Call<List<SensorResuilt>> callTemp = sensorDataService.getLatestTempData();
+        callTemp.enqueue(new Callback<List<SensorResuilt>>() {
+            @Override
+            public void onResponse(Call<List<SensorResuilt>> call, Response<List<SensorResuilt>> response) {
+                List<SensorResuilt> sensorDataList = response.body();
+                if (sensorDataList != null && !sensorDataList.isEmpty()) {
+                    SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
+                    double value = Double.parseDouble(latestSensorData.getValue().toString());
+                    int latestValue = (int) Math.round(value);
+                    tvTemp.setText(String.valueOf(latestValue));
                 }
             }
 
@@ -312,7 +348,25 @@ public class HouseFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             }
         });
+        //Độ ẩm------------------------------------------
+        Call<List<SensorResuilt>> callHumi = sensorDataService.getLatestHumiData();
+        callHumi.enqueue(new Callback<List<SensorResuilt>>() {
+            @Override
+            public void onResponse(Call<List<SensorResuilt>> call, Response<List<SensorResuilt>> response) {
+                List<SensorResuilt> sensorDataList = response.body();
+                if (sensorDataList != null && !sensorDataList.isEmpty()) {
+                    SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
+                    double value = Double.parseDouble(latestSensorData.getValue().toString());
+                    int latestValue = (int) Math.round(value);
+                    tvHumi.setText(String.valueOf(latestValue));
+                }
+            }
 
-
+            @Override
+            public void onFailure(Call<List<SensorResuilt>> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

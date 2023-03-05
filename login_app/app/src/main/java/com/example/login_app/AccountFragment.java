@@ -18,6 +18,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import model.LoginResult;
+import model.RetrofitInterface;
+import model.RetrofitServer;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AccountFragment#newInstance} factory method to
@@ -30,6 +37,9 @@ public class AccountFragment extends Fragment {
     LinearLayout layout_edit, layout_contact, layout_setting;
     TextView tvUsername,tvEmail;
     Button btnLogout;
+
+    RetrofitServer retrofitServer = new RetrofitServer();
+    RetrofitInterface retrofitInterface = retrofitServer.Retrofit();
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,7 +103,7 @@ public class AccountFragment extends Fragment {
 
         sharedPreferences = getActivity().getSharedPreferences("SaveInfo", MODE_PRIVATE);
         tvUsername.setText(sharedPreferences.getString("name2",""));
-        tvEmail.setText(sharedPreferences.getString("email2",""));
+        tvEmail.setText(sharedPreferences.getString("token",""));
 
         layout_edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +132,30 @@ public class AccountFragment extends Fragment {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String auth = sharedPreferences.getString("token","");
+                Call<LoginResult> call = retrofitInterface.Logout(auth);
+
+                call.enqueue(new Callback<LoginResult>() {
+                    @Override
+                    public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+                        Log.e("CODE", response.code()+"");
+                    }
+
+                    @Override
+                    public void onFailure(Call<LoginResult> call, Throwable t) {
+                        Log.e("ssss", "err");
+
+                    }
+                });
+
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.remove("name2");
-                editor.remove("email2");
-                editor.remove("password2");
+                editor.remove("notifytest");
                 editor.remove("notify");
+                editor.remove("notifySoil");
+                editor.remove("notifyWater");
+                editor.remove("notifyWater2");
+                editor.remove("token");
                 editor.commit();
 
                 Intent loginIntent = new Intent(getActivity(), LoginActivity.class);

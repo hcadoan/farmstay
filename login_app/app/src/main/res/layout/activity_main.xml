@@ -24,7 +24,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="35dp"
-                android:text="Sign Up"
+                android:text="@string/signup"
                 android:textColor="@color/farmstay"
                 android:textSize="40sp"
                 android:textStyle="bold" />
@@ -42,7 +42,7 @@
                     android:drawableStart="@drawable/ic_user"
                     android:drawablePadding="16dp"
                     android:ems="10"
-                    android:hint="Username"
+                    android:hint="@string/username"
                     android:inputType="text"
                     android:padding="16dp"
                     android:textSize="20sp" />
@@ -56,7 +56,7 @@
                     android:drawableStart="@drawable/ic_mail"
                     android:drawablePadding="16dp"
                     android:ems="10"
-                    android:hint="Email"
+                    android:hint="@string/emailAddress"
                     android:inputType="textEmailAddress"
                     android:padding="16dp"
                     android:textSize="20sp" />
@@ -75,9 +75,10 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_edittext"
                     android:drawableStart="@drawable/ic_password"
+                    android:drawableEnd="@drawable/ic_visibility_off"
                     android:drawablePadding="16dp"
                     android:ems="10"
-                    android:hint="Password"
+                    android:hint="@string/password2"
                     android:inputType="textPassword"
                     android:padding="16dp"
                     android:textSize="20sp" />
@@ -96,9 +97,10 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_edittext"
                     android:drawableStart="@drawable/ic_password"
+                    android:drawableEnd="@drawable/ic_visibility_off"
                     android:drawablePadding="16dp"
                     android:ems="10"
-                    android:hint="Confirm password"
+                    android:hint="@string/comfirmPass"
                     android:inputType="textPassword"
                     android:padding="16dp"
                     android:textSize="20sp" />
@@ -118,7 +120,7 @@
                 android:layout_height="55dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/bg_button"
-                android:text="Sign Up"
+                android:text="@string/signup"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -141,7 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="15dp"
-                    android:text="Already have an account"
+                    android:text="@string/alreadyhaveanAccount"
                     android:textSize="20sp" />
 
                 <Button
@@ -150,7 +152,7 @@
                     android:layout_height="55dp"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/bg_button"
-                    android:text="Login To Account"
+                    android:text="@string/LogIntoaccount"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
             </LinearLayout>

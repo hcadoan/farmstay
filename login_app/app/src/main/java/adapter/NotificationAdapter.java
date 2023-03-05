@@ -66,6 +66,9 @@ public class NotificationAdapter extends BaseAdapter {
             case 2:
                 imageView.setImageResource(R.drawable.ic_warning);
                 break;
+            case 3:
+                imageView.setImageResource(R.drawable.ic_fire_2);
+                break;
             default:
                 break;
         }

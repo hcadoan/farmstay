@@ -7,7 +7,7 @@ public class RetrofitServer {
 
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
-    private String BASE_URL = "http://192.168.1.40:3000"; //ipv4 address
+    private String BASE_URL = "http://192.168.1.176:3000"; //ipv4 address
 
     public RetrofitInterface Retrofit(){
         retrofit = new Retrofit.Builder()

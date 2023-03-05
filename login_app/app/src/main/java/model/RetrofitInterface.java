@@ -6,15 +6,19 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface RetrofitInterface {
 
-    @POST("/login")
+    @POST("/auth/login")
     Call<LoginResult> executeLogin(@Body HashMap<String, String> map);
 
-    @POST("/signup")
-    Call<Void> executeSignup (@Body HashMap<String, String> map);
+    @POST("/auth/register")
+    Call<Response> executeSignup (@Body HashMap<String, String> map);
+
+    @GET("/auth/logout")
+    Call<LoginResult> Logout(@Header("authenticate_jwt") String token);
 
     @POST("/forgotpassword")
     Call<LoginResult> forgotPassword (@Body HashMap<String, String> map);

@@ -22,14 +22,36 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+                <LinearLayout
+                    android:id="@+id/layoutLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="right">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Language"
+                        android:textSize="20sp"
+                        android:layout_margin="5dp"/>
+                    <ImageView
+                        android:id="@+id/imLanguage"
+                        android:layout_width="35dp"
+                        android:layout_height="23dp"
+                        android:src="@drawable/anh"
+                        android:scaleType="fitXY"
+                        android:layout_margin="5dp"
+                        android:layout_gravity="center_vertical"/>
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginBottom="35dp"
-                    android:text="Log In"
+                    android:text="@string/logIn"
                     android:textColor="@color/farmstay"
                     android:textSize="40sp"
                     android:textStyle="bold" />
@@ -47,7 +69,7 @@
                         android:drawableStart="@drawable/ic_mail"
                         android:drawablePadding="16dp"
                         android:ems="10"
-                        android:hint="Email or Username"
+                        android:hint="@string/emailOrusername"
                         android:inputType="textEmailAddress"
                         android:padding="16dp"
                         android:textSize="20sp" />
@@ -59,9 +81,10 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/bg_edittext"
                         android:drawableStart="@drawable/ic_password"
+                        android:drawableEnd="@drawable/ic_visibility_off"
                         android:drawablePadding="16dp"
                         android:ems="10"
-                        android:hint="Password"
+                        android:hint="@string/password2"
                         android:inputType="textPassword"
                         android:padding="16dp"
                         android:textSize="20sp" />
@@ -76,7 +99,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
-                            android:text="Remember me"
+                            android:text="@string/rememberMe"
                             android:textColor="@color/farmstay"
                             android:textSize="20sp" />
                     </LinearLayout>
@@ -86,7 +109,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:background="@drawable/bg_button"
-                        android:text="Log in"
+                        android:text="@string/logIn"
                         android:textColor="@color/white"
                         android:textSize="18sp" />
 
@@ -97,7 +120,7 @@
                         android:layout_gravity="end"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
-                        android:text="Forgot Password?"
+                        android:text="@string/forgotPassword"
                         android:textColor="@color/farmstay"
                         android:textSize="22sp" />
 
@@ -121,7 +144,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="15dp"
-                        android:text="Create an account?"
+                        android:text="@string/createAnAccount"
                         android:textSize="20sp" />
 
                     <Button
@@ -130,7 +153,7 @@
                         android:layout_height="55dp"
                         android:layout_marginTop="15dp"
                         android:background="@drawable/bg_button"
-                        android:text="Create an account"
+                        android:text="@string/createAnAccount"
                         android:textColor="@color/white"
                         android:textSize="18sp" />
                 </LinearLayout>

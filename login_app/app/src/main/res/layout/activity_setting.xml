@@ -8,15 +8,15 @@
     android:padding="20dp">
 
     <TextView
-        android:id="@+id/tvContract"
+        android:id="@+id/tvChangePass2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:drawableStart="@drawable/ic_phone"
+        android:layout_marginTop="5dp"
+        android:drawableStart="@drawable/ic_logout"
         android:drawableEnd="@drawable/ic_next"
         android:drawablePadding="15dp"
         android:padding="10dp"
-        android:text="Contact"
+        android:text="@string/logout"
         android:textColor="@color/black"
         android:textSize="22sp"
         android:textStyle="normal"
@@ -33,7 +33,7 @@
         android:drawableEnd="@drawable/ic_next"
         android:drawablePadding="15dp"
         android:padding="10dp"
-        android:text="Change Password"
+        android:text="@string/changePass"
         android:textColor="@color/black"
         android:textSize="22sp"
         android:textStyle="normal"
@@ -50,10 +50,10 @@
         app:srcCompat="@drawable/ic_arrow_back" />
 
     <TextView
-        android:id="@+id/textView26"
+        android:id="@+id/textViewSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Setting"
+        android:text="@string/setting"
         android:textAlignment="center"
         android:textColor="@color/farmstay"
         android:textSize="30sp"

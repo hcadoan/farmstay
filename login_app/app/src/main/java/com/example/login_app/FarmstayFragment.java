@@ -74,7 +74,7 @@ public class FarmstayFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager_farmstay);
 
-        ViewPagerAdapter_3 viewPagerAdapter_3 = new ViewPagerAdapter_3(getParentFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        ViewPagerAdapter_3 viewPagerAdapter_3 = new ViewPagerAdapter_3(getActivity(), getParentFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter_3);
         tabLayout.setupWithViewPager(viewPager);
         return view;

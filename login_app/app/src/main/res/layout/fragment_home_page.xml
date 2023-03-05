@@ -48,9 +48,9 @@
                                 android:id="@+id/textView7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Hi, "
+                                android:text="@string/hi"
                                 android:textColor="@color/white"
-                                android:textSize="25sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -59,7 +59,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Username"
                                 android:textColor="@color/white"
-                                android:textSize="25sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -68,9 +68,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
-                            android:text="Welcome to farmstay ACN"
+                            android:text="@string/welcomeToFarmstayACN"
                             android:textColor="@color/white"
-                            android:textSize="25sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -78,6 +78,9 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="3dp"
+                        android:layout_marginBottom="3dp"
                         android:src="@drawable/farmstay_logo_notbackground"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -95,12 +98,12 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Introducing some farmstay areas at Farmstay ACN"
-                        android:textStyle="bold"
-                        android:textColor="@color/farmstay"
-                        android:textSize="20sp"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"/>
+                        android:layout_marginEnd="10dp"
+                        android:text="@string/introducing"
+                        android:textColor="@color/farmstay"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:id="@+id/layoutFarm1"

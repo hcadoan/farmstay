@@ -20,7 +20,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="891dp"
+                android:layout_height="1000dp"
                 android:background="#DCDDDD"
                 android:orientation="vertical"
                 android:padding="20dp">
@@ -29,6 +29,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
                     android:background="@drawable/bg_house_1">
+
+                    <ImageView
+                        android:id="@+id/imageView21"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="15dp"
+                        android:src="@drawable/doc"
+                        app:layout_constraintBottom_toTopOf="@+id/tvHumi"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tvTemp" />
 
                     <TextView
                         android:id="@+id/textView14"
@@ -39,11 +49,12 @@
                         android:textColor="@color/white"
                         android:textSize="30sp"
                         android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvHumi"
                         app:layout_constraintEnd_toStartOf="@+id/imageView9"
                         app:layout_constraintTop_toTopOf="@+id/textView13" />
 
                     <TextView
-                        android:id="@+id/textView13"
+                        android:id="@+id/tvHumi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
@@ -52,31 +63,18 @@
                         android:textSize="30sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@+id/textView14"
-                        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                        app:layout_constraintTop_toBottomOf="@+id/tvTemp" />
 
                     <TextView
-                        android:id="@+id/textView12"
+                        android:id="@+id/tvTemp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="20dp"
-                        android:text="*C"
-                        android:textColor="@color/white"
-                        android:textSize="60sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="48dp"
                         android:text="24"
                         android:textColor="@color/white"
                         android:textSize="60sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@+id/textView12"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView21"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
@@ -87,7 +85,7 @@
                         android:layout_marginTop="15dp"
                         android:text="Location"
                         android:textColor="@color/white"
-                        android:textSize="30sp"
+                        android:textSize="25sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -99,7 +97,7 @@
                         android:layout_marginStart="20dp"
                         android:text="Ho Chi Minh City"
                         android:textColor="@color/white"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/textView11"
                         app:layout_constraintStart_toStartOf="parent"
@@ -109,10 +107,11 @@
                         android:id="@+id/imageView9"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
+                        android:layout_marginEnd="15dp"
                         android:src="@drawable/ic_water_drop"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView13"
-                        app:layout_constraintEnd_toEndOf="@+id/textView12"
-                        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                        app:layout_constraintBottom_toBottomOf="@+id/textView14"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView21"
+                        app:layout_constraintTop_toTopOf="@+id/textView14" />
 
                     <ImageView
                         android:id="@+id/imageView10"
@@ -131,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:text="List of devices"
+                    android:text="@string/listofDevice"
                     android:textColor="@color/farmstay"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -155,7 +154,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:text="Lamp 1"
+                        android:text="@string/lamp1"
                         android:textColor="@color/farmstay"
                         android:textSize="25sp"
                         android:textStyle="bold"
@@ -217,7 +216,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:text="Lamp 2"
+                        android:text="@string/lamp2"
                         android:textColor="@color/farmstay"
                         android:textSize="25sp"
                         android:textStyle="bold"
@@ -263,7 +262,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:text="Lamp 3"
+                        android:text="@string/lamp3"
                         android:textColor="@color/farmstay"
                         android:textSize="25sp"
                         android:textStyle="bold"
@@ -274,37 +273,99 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_icon_2">
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lampOn"
+                        android:textColor="@color/farmstay"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.845"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.145" />
+
+                    <Button
+                        android:id="@+id/btnLampOFF"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_house_1"
+                        android:text="OFF"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/textView2"
+                        app:layout_constraintStart_toStartOf="@+id/textView2"
+                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                    <Button
+                        android:id="@+id/btnLampON"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_house_1"
+                        android:text="ON"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/textView20"
+                        app:layout_constraintStart_toStartOf="@+id/textView20"
+                        app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lampOff"
+                        android:textColor="@color/farmstay"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.131"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.166" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/bg_icon_2">
 
-                <ImageView
-                    android:id="@+id/ImFire"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="28dp"
-                    android:src="@drawable/ic_fire_1"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <ImageView
+                        android:id="@+id/ImFire"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="28dp"
+                        android:src="@drawable/ic_fire_1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/warningTextView"
-                    android:layout_width="219dp"
-                    android:layout_height="64dp"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center"
-                    android:text="WARNING"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.214"
-                    app:layout_constraintStart_toEndOf="@+id/ImFire" />
+                    <TextView
+                        android:id="@+id/warningTextView"
+                        android:layout_width="219dp"
+                        android:layout_height="64dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:text="@string/warning"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.214"
+                        app:layout_constraintStart_toEndOf="@+id/ImFire" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </LinearLayout>
