@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FarmstayFragment">
+    tools:context=".farmstay_page.FarmstayFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -37,5 +37,18 @@
             android:layout_height="match_parent" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="@string/youNotRentedFarmstay"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

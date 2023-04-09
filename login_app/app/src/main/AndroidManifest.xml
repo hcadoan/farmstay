@@ -4,6 +4,9 @@
     package="com.example.login_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MyApplication"
@@ -17,69 +20,77 @@
         android:theme="@style/Theme.Login_app"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".auth.VerifyAccountActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <service android:name=".NotificationService" />
 
         <activity
-            android:name=".Farm_1Activity"
+            android:name=".home_page.Farm_1Activity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ContactActivity"
+            android:name=".account_page.ContactActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".account_page.SettingActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ChangePassActivity"
+            android:name=".auth.ChangePassActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".EditProfileActivity"
+            android:name=".account_page.EditProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".EmailActivity"
+            android:name=".auth.EmailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".VerificationCodeActivity"
+            android:name=".auth.VerificationCodeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".OnboardingActivity"
+            android:name=".onboarding.OnboardingActivity"
             android:exported="false"
-            android:launchMode="singleTop"/>
-
+            android:launchMode="singleTop" />
         <activity
-            android:name=".MainActivity"
+            android:name=".auth.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".DashboardActivity"
+            android:name=".home_page.DashboardActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

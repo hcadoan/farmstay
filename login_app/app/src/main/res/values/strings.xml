@@ -4,9 +4,9 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
     <string-array name="gender">
-        <item>Male</item>
-        <item>Female</item>
-        <item>Other</item>
+        <item>@string/male</item>
+        <item>@string/female</item>
+        <item>@string/other</item>
     </string-array>
 
     <string-array name="language">
@@ -108,5 +108,34 @@
     <string name="canNotCreateAccount">Can not create an account</string>
 
     <string name="loginAgain">Login session has expired, please login again</string>
+    <string name="sureLogout">Are you sure you want to log out?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+
+    <string name="change_avatar">Change avatar</string>
+    <string name="choseImageLibary">Image libary</string>
+    <string name="choseCamera">Camera</string>
+    <string name="cancel">Cancel</string>
+    
+    <string name="youNotRentedFarmstay">you have not rented farmstay. Please rent in the homepage area or contact us directly.</string>
+
+    <string name="website">Website</string>
+    <string name="status">Status</string>
+    <string name="unverified">Unverified account</string>
+    <string name="verified">Verified account</string>
+    <string name="verify">Verify</string>
+    <string name="accountVerification">ACCOUNT VERIFICATION</string>
+    <string name="changePassSuccess">Change password successfully</string>
+    <string name="curentPassIncorect">Current password is incorrect</string>
+    <string name="emailNotRegister">Email not registered account</string>
+    <string name="codeSendSuccess">Code sent successfully</string>
+    <string name="incorectOtpCode">incorrect otp code</string>
+    <string name="otpVerifySuccess">otp verification successful</string>
+    <string name="resetPassSuccess">password reset successful</string>
+    <string name="fan">Fan</string>
 
 </resources>

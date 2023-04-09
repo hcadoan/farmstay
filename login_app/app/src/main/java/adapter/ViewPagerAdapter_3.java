@@ -1,7 +1,6 @@
 package adapter;
 
 import android.content.Context;
-import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,8 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.login_app.FarmFragment;
-import com.example.login_app.HouseFragment;
+import com.example.login_app.farmstay_page.FarmFragment;
+import com.example.login_app.farmstay_page.HouseFragment;
 import com.example.login_app.R;
 
 public class ViewPagerAdapter_3 extends FragmentStatePagerAdapter {

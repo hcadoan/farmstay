@@ -94,4 +94,34 @@
     <string name="canNotCreateAccount">Không thể tạo tài khoản</string>
 
     <string name="loginAgain">Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại</string>
+    <string name="sureLogout">Bạn có chắc chắn muốn đăng xuất?</string>
+    <string name="yes">Có</string>
+    <string name="no">Không</string>
+
+    <string name="male">Nam</string>
+    <string name="female">Nữ</string>
+    <string name="other">Khác</string>
+
+    <string name="change_avatar">Thay đổi ảnh</string>
+    <string name="choseImageLibary">Chọn ảnh từ thư viện</string>
+    <string name="choseCamera">Chụp ảnh</string>
+    <string name="cancel">Hủy</string>
+
+    <string name="youNotRentedFarmstay">bạn chưa thuê farmstay. vui lòng thuê ở khu vực trang chủ hoặc liên hệ trực tiếp với chúng tôi.</string>
+
+    <string name="website">trang web</string>
+    <string name="status">Trạng thái</string>
+    <string name="unverified">tài khoản chưa xác minh</string>
+    <string name="verified">tài khoản đã xác minh</string>
+    <string name="verify">Xác minh</string>
+    <string name="accountVerification">XÁC MINH TÀI KHOẢN</string>
+    <string name="changePassSuccess">Đổi mật khẩu thành công</string>
+    <string name="curentPassIncorect">Mật khẩu hiện tại không chính xác</string>
+    <string name="emailNotRegister">Email chưa đăng ký tài khoản</string>
+    <string name="codeSendSuccess">gửi mã thành công</string>
+    <string name="incorectOtpCode">mã otp không chính xác</string>
+    <string name="otpVerifySuccess">xác minh otp thành công</string>
+    <string name="resetPassSuccess">đặt lại mật khẩu thành công</string>
+    <string name="fan">Quạt</string>
+
 </resources>

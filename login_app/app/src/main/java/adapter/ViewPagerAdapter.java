@@ -2,15 +2,12 @@ package adapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.lifecycle.Lifecycle;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.login_app.OnboardingFragment_1;
-import com.example.login_app.OnboardingFragment_2;
-import com.example.login_app.OnboardingFragment_3;
+import com.example.login_app.onboarding.OnboardingFragment_1;
+import com.example.login_app.onboarding.OnboardingFragment_2;
+import com.example.login_app.onboarding.OnboardingFragment_3;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 

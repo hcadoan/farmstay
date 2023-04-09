@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".HouseFragment">
+    tools:context=".farmstay_page.HouseFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
     <ScrollView
+        android:id="@+id/scrollViewHouse"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1000dp"
+                android:layout_height="1080dp"
                 android:background="#DCDDDD"
                 android:orientation="vertical"
                 android:padding="20dp">
@@ -51,7 +55,7 @@
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/tvHumi"
                         app:layout_constraintEnd_toStartOf="@+id/imageView9"
-                        app:layout_constraintTop_toTopOf="@+id/textView13" />
+                        app:layout_constraintTop_toTopOf="@+id/tvHumi" />
 
                     <TextView
                         android:id="@+id/tvHumi"
@@ -99,7 +103,6 @@
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/textView11"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
@@ -274,6 +277,52 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_icon_2">
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchFan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:textOff="OFF"
+                        android:textOn="ON"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:thumb="@drawable/thump_switch"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:showText="true"
+                        app:track="@drawable/switch_track" />
+
+                    <ImageView
+                        android:id="@+id/imFan"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/fan_off"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/fan"
+                        android:textColor="@color/farmstay"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imFan"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="130dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/bg_icon_2">
@@ -368,7 +417,8 @@
                         app:layout_constraintStart_toEndOf="@+id/ImFire" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountFragment">
+    tools:context=".account_page.AccountFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -31,6 +31,7 @@
                     android:layout_height="317dp"
                     android:background="@drawable/top_background"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -172,13 +173,13 @@
                                 android:layout_marginLeft="15dp"
                                 android:layout_marginRight="15dp"
                                 android:scaleType="fitXY"
-                                android:src="@drawable/ic_edit" />
+                                android:src="@drawable/ic_web" />
 
                             <TextView
                                 android:id="@+id/textView5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/edit"
+                                android:text="@string/website"
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
@@ -188,6 +189,58 @@
                     </LinearLayout>
 
                     <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_margin="10dp"
+                        android:alpha="8.5"
+                        android:background="@color/farmstay" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="140dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="@string/status"
+                                android:textColor="@color/black"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
+
+                            <Button
+                                android:id="@+id/btnVerify"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_1"
+                                android:layout_margin="10dp"
+                                android:layout_weight="1"
+                                android:text="@string/verify"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                android:textAllCaps="false"
+                                />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="@string/unverified"
+                            android:textSize="20sp"
+                            android:drawablePadding="15px"
+                            android:drawableStart="@drawable/ic_unverified"/>
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/appCompatImageView2"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_margin="10dp"
@@ -242,104 +295,6 @@
 
                         <TextView
                             android:id="@+id/tvPhone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="1"
-                            android:text="------------"
-                            android:textAlignment="viewEnd"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_margin="10dp"
-                        android:alpha="8.5"
-                        android:background="@color/farmstay" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:text="@string/address"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="1"
-                            android:text="------------"
-                            android:textAlignment="viewEnd"
-                            android:textSize="20sp" />
-
-                    </LinearLayout>
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_margin="10dp"
-                        android:alpha="8.5"
-                        android:background="@color/farmstay" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:text="@string/gender"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvGender"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:layout_weight="1"
-                            android:text="------------"
-                            android:textAlignment="viewEnd"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/appCompatImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_margin="10dp"
-                        android:alpha="8.5"
-                        android:background="@color/farmstay" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="10dp"
-                            android:text="@string/birthday"
-                            android:textColor="@color/black"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvBirthday"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"

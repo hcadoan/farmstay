@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import com.example.login_app.ImageFragment_1;
-import com.example.login_app.ImageFragment_2;
-import com.example.login_app.ImageFragment_3;
-import com.example.login_app.ImageFragment_4;
+import com.example.login_app.img_dashboard.ImageFragment_1;
+import com.example.login_app.img_dashboard.ImageFragment_2;
+import com.example.login_app.img_dashboard.ImageFragment_3;
+import com.example.login_app.img_dashboard.ImageFragment_4;
 
 public class ViewPageHomeAdapter extends FragmentStatePagerAdapter {
 

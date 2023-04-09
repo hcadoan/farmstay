@@ -2,11 +2,15 @@ package com.example.login_app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import io.socket.client.Socket;
+import model.SocketIO;
 
 public class MyApplication extends Application {
 
@@ -38,4 +42,8 @@ public class MyApplication extends Application {
         }
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
 }

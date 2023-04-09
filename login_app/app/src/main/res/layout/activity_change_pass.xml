@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ChangePassActivity">
+    tools:context=".auth.ChangePassActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="800dp"
                 android:padding="30dp"
-                tools:context=".VerificationCodeActivity">
+                tools:context=".auth.VerificationCodeActivity">
 
                 <TextView
                     android:id="@+id/tvErrorPass4"

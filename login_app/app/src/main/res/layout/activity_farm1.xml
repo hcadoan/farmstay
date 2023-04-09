@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Farm_1Activity">
+    tools:context=".home_page.Farm_1Activity">
 
     <ImageView
         android:id="@+id/imBack4"
@@ -35,7 +35,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="160dp">
+                    android:layout_height="100dp">
 
                     <ImageView
                         android:id="@+id/imageView"
@@ -59,12 +59,25 @@
                     android:background="@drawable/bg_white">
 
 
+                    <TextView
+                        android:id="@+id/nameFarm"
+                        android:layout_width="264dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="16dp"
+                        android:gravity="bottom"
+                        android:text="Framstay đà lạt"
+                        android:textColor="@color/farmstay"
+                        android:textSize="28dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/imageView16"
+                        app:layout_constraintTop_toTopOf="@+id/imageView16" />
+
                     <View
                         android:id="@+id/view2"
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
                         android:layout_marginStart="35dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:layout_marginEnd="50dp"
                         android:background="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -75,81 +88,77 @@
                     <ImageView
                         android:id="@+id/imageView2"
                         android:layout_width="match_parent"
-                        android:layout_height="169dp"
+                        android:layout_height="200dp"
                         android:scaleType="fitXY"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
                         app:srcCompat="@drawable/farmstay" />
 
                     <ImageView
                         android:id="@+id/imageView16"
-                        android:layout_width="56dp"
-                        android:layout_height="54dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="28dp"
+                        android:layout_marginTop="20dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/view2"
                         app:srcCompat="@drawable/ic_home" />
 
                     <ImageView
                         android:id="@+id/imageView17"
-                        android:layout_width="56dp"
-                        android:layout_height="54dp"
-                        android:layout_marginStart="16dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_marginTop="20dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView16"
-                        app:srcCompat="@drawable/baseline_location_on_24" />
+                        app:layout_constraintTop_toBottomOf="@+id/descriptionFarm"
+                        app:srcCompat="@drawable/baseline_location_on_24"
+                        tools:layout_editor_absoluteX="16dp" />
 
                     <ImageView
                         android:id="@+id/imageView20"
-                        android:layout_width="56dp"
-                        android:layout_height="54dp"
-                        android:layout_marginStart="16dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_marginTop="20dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageView17"
-                        app:srcCompat="@drawable/baseline_attach_money_24" />
+                        app:layout_constraintTop_toBottomOf="@+id/addressFarm"
+                        app:srcCompat="@drawable/baseline_attach_money_24"
+                        tools:layout_editor_absoluteX="16dp" />
 
                     <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="264dp"
-                        android:layout_height="54dp"
-                        android:layout_marginStart="16dp"
+                        android:id="@+id/descriptionFarm"
+                        android:layout_width="360dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
                         android:gravity="bottom"
-                        android:text="Framstay đà lạt"
-                        android:textColor="@color/farmstay"
-                        android:textSize="30dp"
+                        android:text="Framstay đà lạt sssssssssssssssssssssssssssssssssssssssssssssssssssssss"
+                        android:textColor="@color/black"
+                        android:textSize="23dp"
                         android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@+id/imageView16"
-                        app:layout_constraintTop_toTopOf="@+id/imageView16" />
+                        app:layout_constraintStart_toStartOf="@+id/imageView16"
+                        app:layout_constraintTop_toBottomOf="@+id/nameFarm" />
 
                     <TextView
-                        android:id="@+id/textView17"
-                        android:layout_width="264dp"
-                        android:layout_height="54dp"
+                        android:id="@+id/addressFarm"
+                        android:layout_width="305dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:gravity="bottom"
-                        android:text="Hồ Chí Minh City"
-                        android:textColor="@color/farmstay"
-                        android:textSize="30dp"
+                        android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@+id/imageView17"
                         app:layout_constraintTop_toTopOf="@+id/imageView17" />
 
                     <TextView
-                        android:id="@+id/textView19"
+                        android:id="@+id/priceFarm"
                         android:layout_width="264dp"
-                        android:layout_height="54dp"
+                        android:layout_height="40dp"
                         android:layout_marginStart="16dp"
                         android:gravity="bottom"
                         android:text="1450000"
-                        android:textColor="@color/farmstay"
-                        android:textSize="30dp"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@+id/imageView20"
                         app:layout_constraintTop_toTopOf="@+id/imageView20" />
