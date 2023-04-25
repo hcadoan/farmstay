@@ -88,6 +88,7 @@ public class NotificationFragment extends Fragment {
         String json = sharedPreferences.getString("notify", "");
         String json2 = sharedPreferences.getString("notifySoil", "");
         String json3 = sharedPreferences.getString("notifyWater", "");
+        String json4 = sharedPreferences.getString("notifyWater2", "");
 
         // Chuyển đổi chuỗi JSON thành danh sách
         Gson gson = new Gson();
@@ -97,6 +98,7 @@ public class NotificationFragment extends Fragment {
         ArrayList<Notification_model> listNotify = new ArrayList<>();
         ArrayList<Notification_model> listNotify2 = new ArrayList<>();
         ArrayList<Notification_model> listNotify3 = new ArrayList<>();
+        ArrayList<Notification_model> listNotify4 = new ArrayList<>();
 
         if (json != null && !json.equals("")) {
             listNotify = gson.fromJson(json, type);
@@ -111,12 +113,20 @@ public class NotificationFragment extends Fragment {
             listNotify3 = gson.fromJson(json3, type);
         }
 
+        // Chuyển đổi chuỗi JSON3 thành danh sách listNotify3
+        if (json4 != null && !json4.equals("")) {
+            listNotify4 = gson.fromJson(json4, type);
+        }
+
         // Thêm tất cả các phần tử của listNotify2,3 vào listNotify
         if (listNotify2 != null && !listNotify2.isEmpty()) {
             listNotify.addAll(listNotify2);
         }
         if (listNotify3 != null && !listNotify3.isEmpty()) {
             listNotify.addAll(listNotify3);
+        }
+        if (listNotify4 != null && !listNotify4.isEmpty()) {
+            listNotify.addAll(listNotify4);
         }
 
         notificationAdapter = new NotificationAdapter(getActivity(), listNotify);
@@ -135,6 +145,7 @@ public class NotificationFragment extends Fragment {
                     editor.remove("notify");
                     editor.remove("notifySoil");
                     editor.remove("notifyWater");
+                    editor.remove("notifyWater2");
                     editor.commit();
                     finalListNotify.clear();
                     lvNotify.setAdapter(null); // Xóa ListView nếu danh sách rỗng

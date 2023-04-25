@@ -45,17 +45,22 @@ public interface RetrofitInterface {
     Call<FarmModel> getFarm(@Header("authenticate_jwt") String token);
 
     //du lieu cam bien
-    @GET("/customer/farmstay/equipments")
-    Call<Response> SocketIO (@Header("authenticate_jwt") String token);
+    @GET("/customer/farmstay/equipments/fields")
+    Call<SensorResuilt> SocketIO (@Header("authenticate_jwt") String token);
 
-    //@GET("/sensor/moisture")
-    //Call<List<SensorResuilt>> getLatestMoisData();
-    //GET("/sensor/temp")
-    //Call<List<SensorResuilt>> getLatestTempData();
-    //@GET("/sensor/humi")
-    //Call<List<SensorResuilt>> getLatestHumiData();
-    //@GET("/sensor/waterlevel")
-    //Call<List<SensorResuilt>> getLatestwaterlevelData();
-    //@GET("/sensor/fire")
-    //Call<List<SensorResuilt>> getLatestfireData();
+    @GET("/customer/farmstay/equipments/fields/latest_data?field=relay_0_data_0")
+    Call<SensorResuilt> RelayValue_0 (@Header("authenticate_jwt") String token);
+
+    @GET("/customer/farmstay/equipments/fields/latest_data?field=relay_0_data_1")
+    Call<SensorResuilt> RelayValue_1 (@Header("authenticate_jwt") String token);
+
+    @GET("/customer/farmstay/equipments/fields/latest_data?field=relay_0_data_2")
+    Call<SensorResuilt> RelayValue_2 (@Header("authenticate_jwt") String token);
+
+    @GET("/customer/farmstay/equipments/fields/latest_data?field=relay_0_data_3")
+    Call<SensorResuilt> RelayValue_3 (@Header("authenticate_jwt") String token);
+
+    @GET("/customer/farmstay")
+    Call<RentedFarm> RentedFarm (@Header("authenticate_jwt") String token);
+
 }

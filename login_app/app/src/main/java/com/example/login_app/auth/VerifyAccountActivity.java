@@ -2,6 +2,7 @@ package com.example.login_app.auth;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +58,12 @@ public class VerifyAccountActivity extends AppCompatActivity {
         btnVerify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Khởi tạo dialog_progressbar
+                final Dialog dialog = new Dialog(VerifyAccountActivity.this);
+                dialog.setContentView(R.layout.layout_dialog_progressbar);
+                ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+                dialog.setCancelable(false);
+
                 //email
                 String email = sharedPreferences.getString("emailUser","");
                 String verifyCode = pinviewCode.getText().toString();
@@ -70,6 +78,8 @@ public class VerifyAccountActivity extends AppCompatActivity {
                     toast.show();
                 }
                 else {
+                    dialog.show();
+
                     String token = sharedPreferences.getString("token","");
                     HashMap<String, String> map = new HashMap<>();
 
@@ -105,6 +115,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
                                 }
                             }
                             else if (response.code() == 401) {
+                                dialog.dismiss();
                                 LoginResult result = null;
                                 try {
                                     result = new Gson().fromJson(response.errorBody().string(), LoginResult.class);
@@ -124,6 +135,7 @@ public class VerifyAccountActivity extends AppCompatActivity {
 
                             }
                             else if (response.code() == 410) {
+                                dialog.dismiss();
                                 LoginResult result = null;
                                 try {
                                     result = new Gson().fromJson(response.errorBody().string(), LoginResult.class);

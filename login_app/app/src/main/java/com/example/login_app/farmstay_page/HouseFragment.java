@@ -1,6 +1,9 @@
 package com.example.login_app.farmstay_page;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -8,6 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,17 +23,29 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.login_app.R;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import api.RentedFarm;
+import api.SensorResuilt;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import model.Notification_model;
 import api.RelayApi;
 import api.RetrofitInterface;
 import api.RetrofitServer;
 import api.RetrofitServer2;
+import model.SocketIO;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,7 +61,7 @@ public class HouseFragment extends Fragment {
     private Timer timer;
     private ImageView mImageView, imLamp1, imLamp2, imLamp3, imFan;
     private ConstraintLayout mLayout;
-    private TextView warningTextView, tvTemp, tvHumi, tvMessage;
+    private TextView warningTextView, tvTemp, tvHumi, tvMessage, tvFarmName, tvFarmAddress;
     private SwitchCompat switch1;
     private SwitchCompat switch2;
     private SwitchCompat switch3;
@@ -56,6 +73,9 @@ public class HouseFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     public static final String CHANNEL_ID = "farmstay";
+
+    SocketIO socketIO;
+    Socket socket;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -118,364 +138,492 @@ public class HouseFragment extends Fragment {
         switch4 = view.findViewById(R.id.btnLampOFF);
         switch5 = view.findViewById(R.id.btnLampON);
         switchFan = view.findViewById(R.id.switchFan);
+        tvFarmName = view.findViewById(R.id.farmName);
+        tvFarmAddress = view.findViewById(R.id.farmAddress);
 
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        socketIO = new SocketIO();
+        socket = socketIO.socket(getActivity());
+
+        RetrofitServer retrofitServer = new RetrofitServer();
+        RetrofitInterface retrofitInterface = retrofitServer.Retrofit();
+
+        sharedPreferences = getActivity().getSharedPreferences("SaveInfo",MODE_PRIVATE);
+        String token = sharedPreferences.getString("token","");
+
+        Call<RentedFarm> callFarm = retrofitInterface.RentedFarm(token);
+        callFarm.enqueue(new Callback<RentedFarm>() {
             @Override
-            public void run() {
-                getLatestSensorData();
-            }
-        }, 0, 5000);  // update every 1000 milliseconds (1 second)
+            public void onResponse(Call<RentedFarm> call, Response<RentedFarm> response) {
+                RentedFarm result = response.body();
+                if(result != null){
+                    JsonObject data = result.getData();
 
-//        //bật/tắt đèn với socketIO
-//        sharedPreferences = getActivity().getSharedPreferences("SaveInfo", MODE_PRIVATE);
-//        String socketUrl = sharedPreferences.getString("socketUrl","");
-//
-//        Socket socket = null;
-//        try {
-//            socket = IO.socket(socketUrl);
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        socket.connect();
-//
-//        // Cập nhật trạng thái đèn trong SharedPreferences
-//        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//
-//        // Lắng nghe sự kiện từ máy chủ Socket.IO để cập nhật trạng thái đèn
-//        socket.on("light_1_status", new Emitter.Listener() {
-//            @Override
-//            public void call(Object... args) {
-//                boolean isLightOn = (boolean) args[0];
-//
-//                editor.putBoolean("isLight_1_On", isLightOn);
-//                editor.apply();
-//
-//                // Cập nhật giao diện của ứng dụng
-//                if (isLightOn) {
-//                    // Hiển thị đèn bật trên giao diện của ứng dụng
-//                    switch1.setChecked(true);
-//                } else {
-//                    // Hiển thị đèn tắt trên giao diện của ứng dụng
-//                    switch1.setChecked(false);
-//                }
-//            }
-//        });
-//
-//        socket.on("light_2_status", new Emitter.Listener() {
-//            @Override
-//            public void call(Object... args) {
-//                boolean isLightOn2 = (boolean) args[0];
-//
-//                editor.putBoolean("isLight_2_On", isLightOn2);
-//                editor.apply();
-//
-//                // Cập nhật giao diện của ứng dụng
-//                if (isLightOn2) {
-//                    // Hiển thị đèn bật trên giao diện của ứng dụng
-//                    switch2.setChecked(true);
-//                } else {
-//                    // Hiển thị đèn tắt trên giao diện của ứng dụng
-//                    switch2.setChecked(false);
-//                }
-//            }
-//        });
-//
-//        socket.on("light_3_status", new Emitter.Listener() {
-//            @Override
-//            public void call(Object... args) {
-//                boolean isLightOn3 = (boolean) args[0];
-//
-//                editor.putBoolean("isLight_3_On", isLightOn3);
-//                editor.apply();
-//
-//                // Cập nhật giao diện của ứng dụng
-//                if (isLightOn3) {
-//                    // Hiển thị đèn bật trên giao diện của ứng dụng
-//                    switch3.setChecked(true);
-//                } else {
-//                    // Hiển thị đèn tắt trên giao diện của ứng dụng
-//                    switch3.setChecked(false);
-//                }
-//            }
-//        });
-//
-//        Socket finalSocket = socket;
-//        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                if(isChecked){
-//                    finalSocket.emit("turn_light_1_on");
-//                } else {
-//                    finalSocket.emit("turn_light_1_off");
-//                }
-//            }
-//        });
-//
-//        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                if(isChecked){
-//                    finalSocket.emit("turn_light_2_on");
-//                } else {
-//                    finalSocket.emit("turn_light_2_off");
-//                }
-//            }
-//        });
-//
-//        switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-//                if(isChecked){
-//                    finalSocket.emit("turn_light_3_on");
-//                } else {
-//                    finalSocket.emit("turn_light_3_off");
-//                }
-//            }
-//        });
+                    String nameFarm = data.get("name").getAsString();
+                    tvFarmName.setText(nameFarm);
 
-        //bat tat den voi retrofit
-        RetrofitServer2 retrofitServer2 = new RetrofitServer2();
-        RelayApi relayApi = retrofitServer2.Retrofit();
-
-        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                int state = isChecked ? 1 : 0;
-                Call<ResponseBody> call = relayApi.setRelayState(1, state);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        try {
-                            String message = response.body().string();
-                            // Xử lý kết quả trả về từ server
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        // Xử lý lỗi
-                    }
-                });
-                if(isChecked){
-                    imLamp1.setImageResource(R.drawable.ic_light_on);
-                } else {
-                    imLamp1.setImageResource(R.drawable.ic_light_off);
+                    JsonObject addressFull = (JsonObject) data.get("address");
+                    String address = addressFull.get("specific_address").getAsString();
+                    tvFarmAddress.setText(address);
                 }
+            }
+
+            @Override
+            public void onFailure(Call<RentedFarm> call, Throwable t) {
 
             }
         });
 
-        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        Map<String, Pair<String, String>> relayValues = new HashMap<>();
+
+        Call<SensorResuilt> call = retrofitInterface.SocketIO(token);
+        call.enqueue(new Callback<SensorResuilt>() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                int state = isChecked ? 1 : 0;
-                Call<ResponseBody> call = relayApi.setRelayState(2, state);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        try {
-                            String message = response.body().string();
-                            // Xử lý kết quả trả về từ server
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+            public void onResponse(Call<SensorResuilt> call, Response<SensorResuilt> response) {
+                SensorResuilt result = response.body();
+                if(result != null){
+                    JsonArray jsondatas = result.getData();
+//                Log.e("dataaa", String.valueOf(jsondatas));
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        // Xử lý lỗi
-                    }
-                });
-                if(isChecked){
-                    imLamp2.setImageResource(R.drawable.ic_light_on);
-                } else {
-                    imLamp2.setImageResource(R.drawable.ic_light_off);
-                }
-            }
-        });
+                    Map<String, Pair<String, Pair<String, String>>> sensorValues = new HashMap<>();
 
-        switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                int state = isChecked ? 1 : 0;
-                Call<ResponseBody> call = relayApi.setRelayState(3, state);
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        try {
-                            String message = response.body().string();
-                            // Xử lý kết quả trả về từ server
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    for (int i = 0; i < jsondatas.size(); i++) {
+                        JsonObject jsondata = (JsonObject) jsondatas.get(i);
+                        String fieldName = jsondata.get("field_name").getAsString();
+                        Log.e("fieldName", fieldName);
+                        String danger_min = jsondata.get("danger_min").getAsString();
+                        String danger_max = jsondata.get("danger_max").getAsString();
 
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        // Xử lý lỗi
-                    }
-                });
-                if(isChecked){
-                    imLamp3.setImageResource(R.drawable.ic_light_on);
-                } else {
-                    imLamp3.setImageResource(R.drawable.ic_light_off);
-                }
-            }
-        });
+                        String farmstay_id = jsondata.get("farmstay_id").getAsString();
+                        String hardware_id = jsondata.get("hardware_id").getAsString();
 
-        switchFan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked){
-                    imFan.setImageResource(R.drawable.fan_on);
-                } else {
-                    imFan.setImageResource(R.drawable.fan_off);
-                }
-            }
-        });
+                        Pair<String, String> relays = new Pair<>(farmstay_id, hardware_id);
+                        relayValues.put(fieldName, relays);
 
-        switch4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Gửi yêu cầu tắt đến tất cả các kênh relay
-                for (int channel = 1; channel <= 3; channel++) {
-                    Call<ResponseBody> call = relayApi.setRelayState(channel, 0);
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            try {
-                                String message = response.body().string();
-                                // Xử lý kết quả trả về từ server
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                        socket.on(fieldName, new Emitter.Listener() {
+                            @Override
+                            public void call(Object... args) {
+                                // Lấy giá trị cảm biến từ tham số args
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            JSONObject jsonObject = new JSONObject(args[0].toString());
+                                            // Thực hiện các thao tác khác với đối tượng jsonObject
+                                            String sensorValue = jsonObject.getString("value");
+                                            Pair<String, Pair<String, String>> value = new Pair<>(sensorValue, new Pair<>(danger_min, danger_max));
+                                            sensorValues.put(fieldName, value);
+                                            //test
+                                            Log.e("sensorValues", String.valueOf(sensorValues));
+                                            //lay gia tri theo tung cam bien
+                                            //bao chay
+                                            Pair<String, Pair<String, String>> fire = sensorValues.get("fire_sensor_0_data_0");
+                                            if (fire != null && !fire.first.isEmpty()) {
+                                                // Lấy giá trị value từ Pair
+                                                String values = fire.first;
+                                                // Chuyển đổi giá trị value sang kiểu float
+                                                float fireValue = Float.parseFloat(values);
+                                                //bao loi
+                                                String danger_max = fire.second.second;
+                                                if (fireValue == 1) {
+                                                    mLayout.setBackgroundResource(R.drawable.bg_icon_red);
+                                                } else {
+                                                    mLayout.setBackgroundResource(R.drawable.bg_icon_2);
+                                                }
+                                            }
+                                            //nhiet do
+                                            Pair<String, Pair<String, String>> temp = sensorValues.get("humidity_temperature_sensor_0_data_0");
+                                            if (temp != null && !temp.first.isEmpty()) {
+                                                // Lấy giá trị value từ Pair
+                                                String values = temp.first;
+                                                int intValue = (int) Double.parseDouble(values);
+                                                String formattedValue = String.format("%d", intValue);
+                                                tvTemp.setText(formattedValue);
+                                            } else {
+                                                // handle the case where myValue is empty
+                                            }
+                                            //do am
+                                            Pair<String, Pair<String, String>> humi = sensorValues.get("humidity_temperature_sensor_0_data_1");
+                                            if (humi != null && !humi.first.isEmpty()) {
+                                                // do something with myValue
+                                                // Lấy giá trị value từ Pair
+                                                String values = humi.first;
+                                                tvHumi.setText(values);
+                                            } else {
+                                                // handle the case where myValue is empty
+                                            }
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
                             }
+                        });
+
+                        //relay
+
+//                    //relay đèn 2
+//                    Pair<String, Pair<String, String>> relay_1 = sensorValues.get("relay_0_data_1");
+//                    if (relay_1 != null && !relay_1.first.isEmpty()) {
+//                        // do something with myValue
+//                        // Lấy giá trị value từ Pair
+//                        String values = relay_1.first;
+//                        int valueRelay_1 = Integer.parseInt(values);
+//                        if (valueRelay_1 == 1) {
+//                            // Hiển thị đèn bật trên giao diện của ứng dụng
+//                            switch2.setChecked(true);
+//                        } else {
+//                            // Hiển thị đèn tắt trên giao diện của ứng dụng
+//                            switch2.setChecked(false);
+//                        }
+//                        //test
+//                        Log.e("relay_test_1", String.valueOf(relay_1));
+//                    } else {
+//                        // handle the case where myValue is empty
+//                    }
+//                    //relay đèn 3
+//                    Pair<String, Pair<String, String>> relay_2 = sensorValues.get("relay_0_data_2");
+//                    if (relay_2 != null && !relay_2.first.isEmpty()) {
+//                        // do something with myValue
+//                        // Lấy giá trị value từ Pair
+//                        String values = relay_2.first;
+//                        int valueRelay_2 = Integer.parseInt(values);
+//                        if (valueRelay_2 == 1) {
+//                            // Hiển thị đèn bật trên giao diện của ứng dụng
+//                            switch3.setChecked(true);
+//                        } else {
+//                            // Hiển thị đèn tắt trên giao diện của ứng dụng
+//                            switch3.setChecked(false);
+//                        }
+//                        //test
+//                        Log.e("relay_test_2", String.valueOf(relay_1));
+//                    } else {
+//                        // handle the case where myValue is empty
+//                    }
+//                    //relay quạt
+//                    Pair<String, Pair<String, String>> relay_3 = sensorValues.get("relay_0_data_3");
+//                    if (relay_3 != null && !relay_3.first.isEmpty()) {
+//                        // do something with myValue
+//                        // Lấy giá trị value từ Pair
+//                        String values = relay_3.first;
+//                        int valueRelay_3 = Integer.parseInt(values);
+//                        if (valueRelay_3 == 1) {
+//                            // Hiển thị đèn bật trên giao diện của ứng dụng
+//                            switchFan.setChecked(true);
+//                        } else {
+//                            // Hiển thị đèn tắt trên giao diện của ứng dụng
+//                            switchFan.setChecked(false);
+//                        }
+//                        //test
+//                        Log.e("relay_test_3", String.valueOf(relay_1));
+//                    } else {
+//                        // handle the case where myValue is empty
+//                    }
+
+                        //relay đèn 1
+                        String farmstayId = null;
+                        String hardwareId = null;
+                        Pair<String, String> relay_0 = relayValues.get("relay_0_data_0");
+                        if (relay_0 != null && !relay_0.first.isEmpty()) {
+                            farmstayId = relay_0.first;
+                            hardwareId = relay_0.second;
                         }
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            // Xử lý lỗi
+
+                        String finalFarmstayId = farmstayId;
+                        String finalHardwareId = hardwareId;
+
+                        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                if(isChecked) {
+                                    imLamp1.setImageResource(R.drawable.ic_light_on);
+                                    sendControlSignal(finalFarmstayId, finalHardwareId, 1);
+                                } else {
+                                    imLamp1.setImageResource(R.drawable.ic_light_off);
+                                    sendControlSignal(finalFarmstayId, finalHardwareId, 0);
+                                }
+                            }
+                        });
+
+                        //relay đèn 2
+                        String farmstayId1 = null;
+                        String hardwareId1 = null;
+                        Pair<String, String> relay_1 = relayValues.get("relay_0_data_1");
+                        if (relay_1 != null && !relay_1.first.isEmpty()) {
+                            farmstayId1 = relay_1.first;
+                            hardwareId1 = relay_1.second;
                         }
-                    });
-                }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch1.setChecked(false);
-                        switch2.setChecked(false);
-                        switch3.setChecked(false);
+
+                        String finalFarmstayId1 = farmstayId1;
+                        String finalHardwareId1 = hardwareId1;
+
+                        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                if(isChecked) {
+                                    sendControlSignal(finalFarmstayId1, finalHardwareId1, 1);
+                                    imLamp2.setImageResource(R.drawable.ic_light_on);
+                                } else {
+                                    sendControlSignal(finalFarmstayId1, finalHardwareId1, 0);
+                                    imLamp2.setImageResource(R.drawable.ic_light_off);
+                                }
+                            }
+                        });
+
+                        //relay đèn 3
+                        String farmstayId2 = null;
+                        String hardwareId2 = null;
+                        Pair<String, String> relay_2 = relayValues.get("relay_0_data_2");
+                        if (relay_2 != null && !relay_2.first.isEmpty()) {
+                            farmstayId2 = relay_2.first;
+                            hardwareId2 = relay_2.second;
+                        }
+
+                        String finalFarmstayId2 = farmstayId2;
+                        String finalHardwareId2 = hardwareId2;
+
+                        switch3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                if(isChecked) {
+                                    sendControlSignal(finalFarmstayId2, finalHardwareId2, 1);
+                                    imLamp3.setImageResource(R.drawable.ic_light_on);
+                                } else {
+                                    sendControlSignal(finalFarmstayId2, finalHardwareId2, 0);
+                                    imLamp3.setImageResource(R.drawable.ic_light_off);
+                                }
+                            }
+                        });
+
+                        //relay quạt
+                        String farmstayId3 = null;
+                        String hardwareId3 = null;
+                        Pair<String, String> relay_3 = relayValues.get("relay_0_data_3");
+                        if (relay_3 != null && !relay_3.first.isEmpty()) {
+                            farmstayId3 = relay_3.first;
+                            hardwareId3 = relay_3.second;
+                        }
+
+                        String finalFarmstayId3 = farmstayId3;
+                        String finalHardwareId3 = hardwareId3;
+
+                        switchFan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                                if(isChecked) {
+                                    sendControlSignal(finalFarmstayId3, finalHardwareId3, 1);
+                                    imFan.setImageResource(R.drawable.fan_on);
+                                } else {
+                                    sendControlSignal(finalFarmstayId3, finalHardwareId3, 0);
+                                    imFan.setImageResource(R.drawable.fan_off);
+                                }
+                            }
+                        });
+
+                        switch4.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                switch1.setChecked(false);
+                                switch2.setChecked(false);
+                                switch3.setChecked(false);
+                            }
+                        });
+
+                        switch5.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                switch1.setChecked(true);
+                                switch2.setChecked(true);
+                                switch3.setChecked(true);
+                            }
+                        });
+
                     }
-                }, 1000);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SensorResuilt> call, Throwable t) {
+
             }
         });
 
-        switch5.setOnClickListener(new View.OnClickListener() {
+        Call<SensorResuilt> callRelay_0 = retrofitInterface.RelayValue_0(token);
+        callRelay_0.enqueue(new Callback<SensorResuilt>() {
             @Override
-            public void onClick(View view) {
-                // Gửi yêu cầu tắt đến tất cả các kênh relay
-                for (int channel = 1; channel <= 3; channel++) {
-                    Call<ResponseBody> call = relayApi.setRelayState(channel, 1);
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            try {
-                                String message = response.body().string();
-                                // Xử lý kết quả trả về từ server
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+            public void onResponse(Call<SensorResuilt> call, Response<SensorResuilt> response) {
+                SensorResuilt result = response.body();
+                if(result != null){
+                    JsonArray jsondatas = result.getData();
+
+                    int lastIndex = jsondatas.size() - 1;
+                    JsonObject lastObject = jsondatas.get(lastIndex).getAsJsonObject();
+                    String valueRelay = lastObject.get("value").getAsString();
+                    Log.e("valueRelay_0", valueRelay);
+
+                    //relay đèn 1
+                    if (valueRelay != null && !valueRelay.isEmpty()) {
+                        // do something with myValue
+                        int ValueRelay = Integer.parseInt(valueRelay);
+                        if (ValueRelay == 1) {
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            switch1.setChecked(true);
+                        } else {
+                            // Hiển thị đèn tắt trên giao diện của ứng dụng
+                            switch1.setChecked(false);
                         }
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            // Xử lý lỗi
-                        }
-                    });
-                }
-                // Tự động tắt switch
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        switch1.setChecked(true);
-                        switch2.setChecked(true);
-                        switch3.setChecked(true);
+                    } else {
+                        // handle the case where myValue is empty
                     }
-                }, 1000);
+                    if(switch1.isChecked()) {
+                        imLamp1.setImageResource(R.drawable.ic_light_on);
+                    } else {
+                        imLamp1.setImageResource(R.drawable.ic_light_off);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SensorResuilt> call, Throwable t) {
+
+            }
+        });
+
+        Call<SensorResuilt> callRelay_1 = retrofitInterface.RelayValue_1(token);
+        callRelay_1.enqueue(new Callback<SensorResuilt>() {
+            @Override
+            public void onResponse(Call<SensorResuilt> call, Response<SensorResuilt> response) {
+                SensorResuilt result = response.body();
+                if(result != null){
+                    JsonArray jsondatas = result.getData();
+
+                    int lastIndex = jsondatas.size() - 1;
+                    JsonObject lastObject = jsondatas.get(lastIndex).getAsJsonObject();
+                    String valueRelay = lastObject.get("value").getAsString();
+                    Log.e("valueRelay_0", valueRelay);
+
+                    //relay đèn 1
+                    if (valueRelay != null && !valueRelay.isEmpty()) {
+                        // do something with myValue
+                        int ValueRelay = Integer.parseInt(valueRelay);
+                        if (ValueRelay == 1) {
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            switch2.setChecked(true);
+                        } else {
+                            // Hiển thị đèn tắt trên giao diện của ứng dụng
+                            switch2.setChecked(false);
+                        }
+                    } else {
+                        // handle the case where myValue is empty
+                    }
+                    if(switch2.isChecked()) {
+                        imLamp2.setImageResource(R.drawable.ic_light_on);
+                    } else {
+                        imLamp2.setImageResource(R.drawable.ic_light_off);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SensorResuilt> call, Throwable t) {
+
+            }
+        });
+
+        Call<SensorResuilt> callRelay_2 = retrofitInterface.RelayValue_2(token);
+        callRelay_2.enqueue(new Callback<SensorResuilt>() {
+            @Override
+            public void onResponse(Call<SensorResuilt> call, Response<SensorResuilt> response) {
+                SensorResuilt result = response.body();
+                if(result != null){
+                    JsonArray jsondatas = result.getData();
+
+                    int lastIndex = jsondatas.size() - 1;
+                    JsonObject lastObject = jsondatas.get(lastIndex).getAsJsonObject();
+                    String valueRelay = lastObject.get("value").getAsString();
+                    Log.e("valueRelay_0", valueRelay);
+
+                    //relay đèn 1
+                    if (valueRelay != null && !valueRelay.isEmpty()) {
+                        // do something with myValue
+                        int ValueRelay = Integer.parseInt(valueRelay);
+                        if (ValueRelay == 1) {
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            switch3.setChecked(true);
+                        } else {
+                            // Hiển thị đèn tắt trên giao diện của ứng dụng
+                            switch3.setChecked(false);
+                        }
+                    } else {
+                        // handle the case where myValue is empty
+                    }
+                    if(switch3.isChecked()) {
+                        imLamp3.setImageResource(R.drawable.ic_light_on);
+                    } else {
+                        imLamp3.setImageResource(R.drawable.ic_light_off);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SensorResuilt> call, Throwable t) {
+
+            }
+        });
+
+        Call<SensorResuilt> callRelay_3 = retrofitInterface.RelayValue_3(token);
+        callRelay_3.enqueue(new Callback<SensorResuilt>() {
+            @Override
+            public void onResponse(Call<SensorResuilt> call, Response<SensorResuilt> response) {
+                SensorResuilt result = response.body();
+                if(result != null){
+                    JsonArray jsondatas = result.getData();
+
+                    int lastIndex = jsondatas.size() - 1;
+                    JsonObject lastObject = jsondatas.get(lastIndex).getAsJsonObject();
+                    String valueRelay = lastObject.get("value").getAsString();
+                    Log.e("valueRelay_0", valueRelay);
+
+                    //relay đèn 1
+                    if (valueRelay != null && !valueRelay.isEmpty()) {
+                        // do something with myValue
+                        int ValueRelay = Integer.parseInt(valueRelay);
+                        if (ValueRelay == 1) {
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            switchFan.setChecked(true);
+                        } else {
+                            // Hiển thị đèn tắt trên giao diện của ứng dụng
+                            switchFan.setChecked(false);
+                        }
+                    } else {
+                        // handle the case where myValue is empty
+                    }
+                    if(switchFan.isChecked()) {
+                        imFan.setImageResource(R.drawable.fan_on);
+                    } else {
+                        imFan.setImageResource(R.drawable.fan_off);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SensorResuilt> call, Throwable t) {
+
             }
         });
 
         return view;
     }
-
-    private void getLatestSensorData() {
-        RetrofitServer retrofitServer = new RetrofitServer();
-        RetrofitInterface sensorDataService = retrofitServer.Retrofit();
-
-//        //bao chay
-//        Call<List<SensorResuilt>> callfire = sensorDataService.getLatestfireData();
-//        callfire.enqueue(new Callback<List<SensorResuilt>>() {
-//            @Override
-//            public void onResponse(Call<List<SensorResuilt>> call, Response<List<SensorResuilt>> response) {
-//                List<SensorResuilt> sensorDataList = response.body();
-//                if (sensorDataList != null && !sensorDataList.isEmpty()) {
-//                    SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-//                    String fireSensor = latestSensorData.getValue();
-//
-//                    if (fireSensor.equals("1")) {
-//                        mLayout.setBackgroundResource(R.drawable.bg_icon_red);
-//                    } else {
-//                        mLayout.setBackgroundResource(R.drawable.bg_icon_2);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<SensorResuilt>> call, Throwable t) {
-//
-//            }
-//        });
-//
-//        //Nhietdo------------------------------------------
-//        Call<List<SensorResuilt>> callTemp = sensorDataService.getLatestTempData();
-//        callTemp.enqueue(new Callback<List<SensorResuilt>>() {
-//            @Override
-//            public void onResponse(Call<List<SensorResuilt>> call, Response<List<SensorResuilt>> response) {
-//                List<SensorResuilt> sensorDataList = response.body();
-//                if (sensorDataList != null && !sensorDataList.isEmpty()) {
-//                    SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-//                    double value = Double.parseDouble(latestSensorData.getValue().toString());
-//                    int latestValue = (int) Math.round(value);
-//                    tvTemp.setText(String.valueOf(latestValue));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<SensorResuilt>> call, Throwable t) {
-//                Toast.makeText(getActivity(), t.getMessage(),
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        });
-//        //Độ ẩm------------------------------------------
-//        Call<List<SensorResuilt>> callHumi = sensorDataService.getLatestHumiData();
-//        callHumi.enqueue(new Callback<List<SensorResuilt>>() {
-//            @Override
-//            public void onResponse(Call<List<SensorResuilt>> call, Response<List<SensorResuilt>> response) {
-//                List<SensorResuilt> sensorDataList = response.body();
-//                if (sensorDataList != null && !sensorDataList.isEmpty()) {
-//                    SensorResuilt latestSensorData = sensorDataList.get(sensorDataList.size() - 1);
-//                    double value = Double.parseDouble(latestSensorData.getValue().toString());
-//                    int latestValue = (int) Math.round(value);
-//                    tvHumi.setText(String.valueOf(latestValue));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<SensorResuilt>> call, Throwable t) {
-//                Toast.makeText(getActivity(), t.getMessage(),
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        });
+    // Gửi tín hiệu điều khiển
+    private void sendControlSignal(String farmstayId, String hardwareId, int value) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("farmstay_id", farmstayId);
+            data.put("hardware_id", hardwareId);
+            data.put("value", value);
+            socket.emit("client_control", data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

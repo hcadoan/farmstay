@@ -50,7 +50,7 @@ public class AccountFragment extends Fragment {
 
     LinearLayout layout_edit, layout_contact, layout_setting;
     TextView tvUsername,tvEmail, tvStatus;
-    Button btnLogout, btnVerify;
+    Button btnVerify;
 
     RetrofitServer retrofitServer = new RetrofitServer();
     RetrofitInterface retrofitInterface = retrofitServer.Retrofit();
@@ -110,7 +110,6 @@ public class AccountFragment extends Fragment {
 
         tvUsername = view.findViewById(R.id.tvUsername);
         tvEmail = view.findViewById(R.id.tvEmail);
-        btnLogout = view.findViewById(R.id.btnLogout);
         layout_edit = view.findViewById(R.id.layout_edit);
         layout_contact = view.findViewById(R.id.layout_contact);
         layout_setting = view.findViewById(R.id.layout_setting);
@@ -167,8 +166,8 @@ public class AccountFragment extends Fragment {
         layout_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -185,13 +184,6 @@ public class AccountFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), SettingActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLogoutDialog();
             }
         });
 

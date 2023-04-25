@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(MainActivity.this);
                 dialog.setContentView(R.layout.layout_dialog_progressbar);
                 ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+                dialog.setCancelable(false);
 
                 if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name) || TextUtils.isEmpty(password_2)){
                     View view1 = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));

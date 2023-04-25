@@ -41,7 +41,7 @@ public class SocketIO {
             @Override
             public void call(Object... args) {
                 // Kết nối thành công
-                Log.d(TAG, "Connected to server");
+                Log.e(TAG, "Connected to server");
             }
         });
 

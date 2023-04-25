@@ -149,6 +149,7 @@ public class VerificationCodeActivity extends BaseActivity {
                 final Dialog dialog = new Dialog(VerificationCodeActivity.this);
                 dialog.setContentView(R.layout.layout_dialog_progressbar);
                 ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+                dialog.setCancelable(false);
 
                 String verifyCode = pinViewCode.getText().toString();
                 String email = tvEmail.getText().toString();

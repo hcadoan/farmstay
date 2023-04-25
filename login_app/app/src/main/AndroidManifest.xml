@@ -83,14 +83,14 @@
             android:name=".auth.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".onboarding.OnboardingActivity"
+            android:name=".home_page.DashboardActivity"
             android:exported="false"
             android:launchMode="singleTop" />
         <activity
             android:name=".auth.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".home_page.DashboardActivity"
+            android:name=".onboarding.OnboardingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

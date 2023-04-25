@@ -1,13 +1,15 @@
 package api;
 
-public class SensorResuilt {
-    String value;
+import com.google.gson.JsonArray;
 
-    public String getValue() {
-        return value;
+public class SensorResuilt {
+    JsonArray data;
+
+    public JsonArray getData() {
+        return data;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setData(JsonArray data) {
+        this.data = data;
     }
 }

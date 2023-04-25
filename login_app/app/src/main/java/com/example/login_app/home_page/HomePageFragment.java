@@ -53,9 +53,6 @@ public class HomePageFragment extends Fragment {
     private CircleIndicator circleIndicator;
     private ListView lvHomeFarm;
 
-    //test
-    private ImageView imageView7;
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -107,8 +104,6 @@ public class HomePageFragment extends Fragment {
         circleIndicator = view.findViewById(R.id.circleIndicator);
         lvHomeFarm = view.findViewById(R.id.lvHomeFarm);
 
-        imageView7 = view.findViewById(R.id.imageView7);
-
         viewPageHomeAdapter = new ViewPageHomeAdapter(getParentFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPageHomeAdapter);
         circleIndicator.setViewPager(viewPager);
@@ -125,8 +120,8 @@ public class HomePageFragment extends Fragment {
 
         List<FarmstayModel> farmstayList = new ArrayList<>(); // tạo một danh sách ArrayList để chứa các Farm
 
-        Call<FarmModel> callUser = retrofitInterface.getFarm(token);
-        callUser.enqueue(new Callback<FarmModel>() {
+        Call<FarmModel> call = retrofitInterface.getFarm(token);
+        call.enqueue(new Callback<FarmModel>() {
             @Override
             public void onResponse(Call<FarmModel> call, Response<FarmModel> response) {
                 Log.e("codeFarm", response.code()+"");
@@ -182,11 +177,6 @@ public class HomePageFragment extends Fragment {
 
             }
         });
-
-        //test
-        Glide.with(getActivity())
-                .load("https://ik.imagekit.io/pytuna1611/Farmstay/1680676843984_farmstay_tien_giang-farmstay_hjXj0c2uOF.jpg")
-                .into(imageView7);
 
         lvHomeFarm.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

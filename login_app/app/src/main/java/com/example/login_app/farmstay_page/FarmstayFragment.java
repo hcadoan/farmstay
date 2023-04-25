@@ -16,19 +16,30 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.login_app.R;
+import com.example.login_app.home_page.DashboardActivity;
 import com.google.android.material.tabs.TabLayout;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import adapter.ViewPagerAdapter_3;
-import io.socket.client.Socket;
-import api.Response;
+import api.LoginResult;
+import api.RentedFarm;
 import api.RetrofitInterface;
 import api.RetrofitServer;
+import api.SensorResuilt;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+import model.SensorData;
 import model.SocketIO;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,12 +104,6 @@ public class FarmstayFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewPager_farmstay);
         tvMessage = view.findViewById(R.id.tvMessage);
 
-//        tvMessage.setVisibility(View.VISIBLE);
-//        viewPager.setVisibility(View.INVISIBLE);
-
-        tvMessage.setVisibility(View.INVISIBLE);
-        viewPager.setVisibility(View.VISIBLE);
-
         ViewPagerAdapter_3 viewPagerAdapter_3 = new ViewPagerAdapter_3(getActivity(), getParentFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter_3);
         tabLayout.setupWithViewPager(viewPager);
@@ -112,64 +117,38 @@ public class FarmstayFragment extends Fragment {
         RetrofitServer retrofitServer = new RetrofitServer();
         RetrofitInterface retrofitInterface = retrofitServer.Retrofit();
 
-        SocketIO socketIO = new SocketIO();
-        Socket socket = socketIO.socket(getActivity());
-
-        //test gửi lên socketIO
-//        String mes = "hello";
-//        String jsonstring = "{message: " + "'" + mes + "'" + "}";
-//        try {
-//            JSONObject messageJson = new JSONObject(jsonstring);
-//            getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Log.e("message", String.valueOf(mes));
-//                    socket.emit("subscribe", mes);
-//                }
-//            });
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        socket.on("message", new Emitter.Listener() {
-//            @Override
-//            public void call(Object... args) {
-//                // Lấy giá trị cảm biến từ tham số args
-//                try {
-//                    JSONObject jsondata = new JSONObject(args[0].toString());
-//                    String mesData = jsondata.getString("value");
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Log.e("messageData", String.valueOf(mesData));
-//                        }
-//                    });
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-
-        sharedPreferences = getActivity().getSharedPreferences("SaveInfo", MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences("SaveInfo",MODE_PRIVATE);
         String token = sharedPreferences.getString("token","");
-        Call<Response> call = retrofitInterface.SocketIO(token);
-        call.enqueue(new Callback<Response>() {
+
+        Call<RentedFarm> callFarm = retrofitInterface.RentedFarm(token);
+        callFarm.enqueue(new Callback<RentedFarm>() {
             @Override
-            public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
-                try {
-                    JSONObject jsondata = new JSONObject(response.toString());
-                    Log.e("callApi", String.valueOf(jsondata));
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            public void onResponse(Call<RentedFarm> call, Response<RentedFarm> response) {
+                RentedFarm result = response.body();
+                if(result != null){
+                    JsonObject data = result.getData();
+                    //test
+                    Log.e("dataFarmTest", String.valueOf(data));
+
+                    String nameFarm = data.get("name").getAsString();
+
+                    JsonObject addressFull = (JsonObject) data.get("address");
+                    String address = addressFull.get("specific_address").getAsString();
+
+                    tvMessage.setVisibility(View.INVISIBLE);
+                    viewPager.setVisibility(View.VISIBLE);
+
+                } else {
+                    tvMessage.setVisibility(View.VISIBLE);
+                    viewPager.setVisibility(View.INVISIBLE);
                 }
             }
 
             @Override
-            public void onFailure(Call<Response> call, Throwable t) {
+            public void onFailure(Call<RentedFarm> call, Throwable t) {
 
             }
         });
-
     }
 
 }

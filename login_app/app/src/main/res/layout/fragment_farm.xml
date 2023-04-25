@@ -64,7 +64,7 @@
                         android:layout_width="180dp"
                         android:layout_height="180dp"
                         android:layout_marginStart="5dp"
-                        app:donut_finished_color="#F44336"
+                        app:donut_finished_color="#CDDC39"
                         app:donut_finished_stroke_width="20dp"
                         app:donut_text_color="@color/white"
                         app:donut_text_size="30sp"

@@ -1,5 +1,7 @@
 package api;
 
+import com.google.gson.JsonObject;
+
 import org.json.JSONObject;
 
 public class Response {
@@ -31,6 +33,7 @@ public class Response {
     public void setSocket_url(String socket_url) {
         this.socket_url = socket_url;
     }
+
 
     @Override
     public String toString() {

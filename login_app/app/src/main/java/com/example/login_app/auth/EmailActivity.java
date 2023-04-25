@@ -72,6 +72,7 @@ public class EmailActivity extends BaseActivity {
                 final Dialog dialog = new Dialog(EmailActivity.this);
                 dialog.setContentView(R.layout.layout_dialog_progressbar);
                 ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+                dialog.setCancelable(false);
 
                 String email = etEmailSend.getText().toString();
                 if(TextUtils.isEmpty(email)) {

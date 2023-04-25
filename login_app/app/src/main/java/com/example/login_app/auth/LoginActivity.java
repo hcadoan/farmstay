@@ -201,6 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                 final Dialog dialog = new Dialog(LoginActivity.this);
                 dialog.setContentView(R.layout.layout_dialog_progressbar);
                 ProgressBar progressBar = dialog.findViewById(R.id.progressBar);
+                dialog.setCancelable(false);
 
                 if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
                     View view1 = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
@@ -237,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
                     call.enqueue(new Callback<LoginResult>() {
                         @Override
                         public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
-
+                            Log.e("code", String.valueOf(response.code()));
                             if (response.code() == 200) {
 
                                 LoginResult result = response.body();
@@ -315,12 +316,12 @@ public class LoginActivity extends AppCompatActivity {
                                 try {
                                     LoginResult result = new Gson().fromJson(response.errorBody().string(), LoginResult.class);
                                     // do something with the result
-                                    String mes = result.getMsg();
-                                    String msg_vi = result.getMsg_vi();
+                                    String mes = result.getMessage();
+//                                    String msg_vi = result.getMsg_vi();
 
                                     View view1 = inflater.inflate(R.layout.layout_toast_error, (ViewGroup) findViewById(R.id.Layout_toast_2));
                                     TextView tvMessege = view1.findViewById(R.id.tvMessege2);
-                                    tvMessege.setText(R.string.wrongPassword);
+                                    tvMessege.setText(mes);
                                     toast.setView(view1);
                                     toast.setGravity(Gravity.CENTER, 0, 0);
                                     toast.setDuration(Toast.LENGTH_LONG);
@@ -329,7 +330,6 @@ public class LoginActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     // handle the exception, such as logging or displaying an error message
                                 }
-
                             } else if (response.code() == 500) {
                                 dialog.dismiss();
                                 try {

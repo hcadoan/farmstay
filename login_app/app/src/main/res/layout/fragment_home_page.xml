@@ -153,12 +153,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
-                    <ImageView
-                        android:id="@+id/imageView7"
-                        android:layout_width="match_parent"
-                        android:layout_height="100dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/farmstay" />
 
                     <!--                    <LinearLayout-->
                     <!--                        android:id="@+id/layoutFarm1"-->
