@@ -6,6 +6,8 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.login_app.auth.LoginActivity;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,10 +37,11 @@ public class MyApplication extends Application {
 
     public void recreateAll() {
         for (Activity activity : mActivityList) {
-            activity.recreate();
-        }
-        for (Fragment fragment : mFragmentList) {
-            fragment.getActivity().recreate();
+            if (activity instanceof LoginActivity) {
+                activity.recreate();
+            } else {
+                activity.finish(); // Đóng hoạt động hiện tại nếu không phải là LoginActivity
+            }
         }
     }
 
