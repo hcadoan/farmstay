@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitServer2 {
     private Retrofit retrofit;
     private RelayApi relayApi;
-    private String BASE_URL = "http://api.farmstays.me:3000"; //ipv4 address
+    private String BASE_URL = "http://farmstays.me:8888/api/"; //ipv4 address
 
     public RelayApi Retrofit(){
         retrofit = new Retrofit.Builder()

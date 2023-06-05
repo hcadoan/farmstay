@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,10 +63,6 @@ public class HomePageFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public HomePageFragment() {
-        // Required empty public constructor
-    }
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -107,6 +104,18 @@ public class HomePageFragment extends Fragment {
         viewPageHomeAdapter = new ViewPageHomeAdapter(getParentFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPageHomeAdapter);
         circleIndicator.setViewPager(viewPager);
+
+        // Tự động chuyển fragment sau mỗi 2 giây
+        final Handler handler = new Handler();
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                if (viewPager != null) {
+                    viewPager.setCurrentItem((viewPager.getCurrentItem() + 1) % viewPageHomeAdapter.getCount(), true);
+                }
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.postDelayed(runnable, 2000);
 
         sharedPreferences = getActivity().getSharedPreferences("SaveInfo", MODE_PRIVATE);
         tvUsername.setText(sharedPreferences.getString("usernameUser",""));

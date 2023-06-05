@@ -233,21 +233,19 @@ public class LoginActivity extends AppCompatActivity {
                     map.put("login", email);
                     map.put("password", password);
 
-                    Call<LoginResult> call = retrofitInterface.executeLogin(map);
+                    Call<JsonObject> call = retrofitInterface.executeLogin(map);
 
-                    call.enqueue(new Callback<LoginResult>() {
+                    call.enqueue(new Callback<JsonObject>() {
                         @Override
-                        public void onResponse(Call<LoginResult> call, Response<LoginResult> response) {
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                             Log.e("code", String.valueOf(response.code()));
                             if (response.code() == 200) {
 
-                                LoginResult result = response.body();
-                                String token = result.getAuthenticate_jwt();
-                                String mes = result.getMsg();
-                                String msg_vi = result.getMsg_vi();
+                                JsonObject result = response.body();
+                                String token = result.get("authenticate-jwt").getAsString();
 
-                                String email = result.getEmail();
-                                String username = result.getUsername();
+//                                String email = result.get("email").getAsString();
+//                                String username = result.get("username").getAsString();
 
                                 View view = inflater.inflate(R.layout.layout_toast_success, (ViewGroup) findViewById(R.id.Layout_toast));
                                 TextView tvMessege = view.findViewById(R.id.tvMessege1);
@@ -259,8 +257,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.putString("token", token);
-                                editor.putString("emails", email);
-                                editor.putString("usernames", username);
+//                                editor.putString("emails", email);
+//                                editor.putString("usernames", username);
                                 editor.commit();
 
                                 Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
@@ -352,9 +350,8 @@ public class LoginActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<LoginResult> call, Throwable t) {
-                            Toast.makeText(LoginActivity.this, t.getMessage(),
-                                    Toast.LENGTH_LONG).show();
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+
                         }
                     });
                 }

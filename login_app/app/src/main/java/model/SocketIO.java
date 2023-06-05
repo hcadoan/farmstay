@@ -30,8 +30,8 @@ public class SocketIO {
             IO.Options opts = new IO.Options();
             List<String> authHeader = new ArrayList<>();
             authHeader.add(getToken(context));
-            opts.extraHeaders = Collections.singletonMap("authenticate_jwt", authHeader);
-            socket = IO.socket("http://api.farmstays.me/farmstay", opts);
+            opts.extraHeaders = Collections.singletonMap("authenticate-jwt", authHeader);
+            socket = IO.socket("https://farmstays.me/farmstay", opts);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

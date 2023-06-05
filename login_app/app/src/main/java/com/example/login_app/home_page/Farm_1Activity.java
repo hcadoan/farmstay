@@ -12,6 +12,10 @@ import com.bumptech.glide.Glide;
 import com.example.login_app.R;
 import com.example.login_app.shared_activity.BaseActivity;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class Farm_1Activity extends BaseActivity {
 
     ImageView imback, imFarm;
@@ -50,6 +54,14 @@ public class Farm_1Activity extends BaseActivity {
         String address = intent.getStringExtra("address");
         String price = intent.getStringExtra("price");
 
+        int priceInt = Integer.parseInt(price);
+
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.getDefault());
+        DecimalFormat decimalFormat = (DecimalFormat) numberFormat;
+        decimalFormat.applyPattern("#,### VND");
+
+        String formattedPrice = decimalFormat.format(priceInt);
+
         Glide.with(this)
                 .load(imageUrl)
                 .into(imFarm);
@@ -57,6 +69,6 @@ public class Farm_1Activity extends BaseActivity {
         tvNameFarm.setText(name);
         tvDescription.setText(description);
         tvAddress.setText(address);
-        tvPrice.setText(price);
+        tvPrice.setText(formattedPrice);
     }
 }

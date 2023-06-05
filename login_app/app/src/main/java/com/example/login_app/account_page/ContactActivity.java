@@ -54,7 +54,7 @@ public class ContactActivity extends BaseActivity {
         imageViewfb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String facebookUrl = "https://www.facebook.com/namanh2209/";
+                String facebookUrl = "https://www.facebook.com/hoangca09/";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl));
                 startActivity(intent);
             }
@@ -81,7 +81,7 @@ public class ContactActivity extends BaseActivity {
         imageViewweb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String facebookUrl = "https://www.flaticon.com/";
+                String facebookUrl = "https://farmstays.me/";
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookUrl));
                 startActivity(intent);
             }

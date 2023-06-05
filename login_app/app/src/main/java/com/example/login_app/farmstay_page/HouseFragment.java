@@ -261,65 +261,6 @@ public class HouseFragment extends Fragment {
                         });
 
                         //relay
-
-//                    //relay đèn 2
-//                    Pair<String, Pair<String, String>> relay_1 = sensorValues.get("relay_0_data_1");
-//                    if (relay_1 != null && !relay_1.first.isEmpty()) {
-//                        // do something with myValue
-//                        // Lấy giá trị value từ Pair
-//                        String values = relay_1.first;
-//                        int valueRelay_1 = Integer.parseInt(values);
-//                        if (valueRelay_1 == 1) {
-//                            // Hiển thị đèn bật trên giao diện của ứng dụng
-//                            switch2.setChecked(true);
-//                        } else {
-//                            // Hiển thị đèn tắt trên giao diện của ứng dụng
-//                            switch2.setChecked(false);
-//                        }
-//                        //test
-//                        Log.e("relay_test_1", String.valueOf(relay_1));
-//                    } else {
-//                        // handle the case where myValue is empty
-//                    }
-//                    //relay đèn 3
-//                    Pair<String, Pair<String, String>> relay_2 = sensorValues.get("relay_0_data_2");
-//                    if (relay_2 != null && !relay_2.first.isEmpty()) {
-//                        // do something with myValue
-//                        // Lấy giá trị value từ Pair
-//                        String values = relay_2.first;
-//                        int valueRelay_2 = Integer.parseInt(values);
-//                        if (valueRelay_2 == 1) {
-//                            // Hiển thị đèn bật trên giao diện của ứng dụng
-//                            switch3.setChecked(true);
-//                        } else {
-//                            // Hiển thị đèn tắt trên giao diện của ứng dụng
-//                            switch3.setChecked(false);
-//                        }
-//                        //test
-//                        Log.e("relay_test_2", String.valueOf(relay_1));
-//                    } else {
-//                        // handle the case where myValue is empty
-//                    }
-//                    //relay quạt
-//                    Pair<String, Pair<String, String>> relay_3 = sensorValues.get("relay_0_data_3");
-//                    if (relay_3 != null && !relay_3.first.isEmpty()) {
-//                        // do something with myValue
-//                        // Lấy giá trị value từ Pair
-//                        String values = relay_3.first;
-//                        int valueRelay_3 = Integer.parseInt(values);
-//                        if (valueRelay_3 == 1) {
-//                            // Hiển thị đèn bật trên giao diện của ứng dụng
-//                            switchFan.setChecked(true);
-//                        } else {
-//                            // Hiển thị đèn tắt trên giao diện của ứng dụng
-//                            switchFan.setChecked(false);
-//                        }
-//                        //test
-//                        Log.e("relay_test_3", String.valueOf(relay_1));
-//                    } else {
-//                        // handle the case where myValue is empty
-//                    }
-
                         //relay đèn 1
                         String farmstayId = null;
                         String hardwareId = null;
@@ -609,6 +550,125 @@ public class HouseFragment extends Fragment {
             @Override
             public void onFailure(Call<SensorResuilt> call, Throwable t) {
 
+            }
+        });
+
+        //cập nhật relay realtime
+        socket.on("relay_0_data_0", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // Lấy giá trị cảm biến từ tham số args
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(args[0].toString());
+                            // Thực hiện các thao tác khác với đối tượng jsonObject
+                            String sensorValue = jsonObject.getString("value");
+                            int relayValue = Integer.parseInt(sensorValue);
+                            //test
+                            Log.e("RelayValuesRealtime", String.valueOf(relayValue));
+
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            if(relayValue == 1){
+                                switch1.setChecked(true);
+                            } else {
+                                switch1.setChecked(false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        socket.on("relay_0_data_1", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // Lấy giá trị cảm biến từ tham số args
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(args[0].toString());
+                            // Thực hiện các thao tác khác với đối tượng jsonObject
+                            String sensorValue = jsonObject.getString("value");
+                            int relayValue = Integer.parseInt(sensorValue);
+                            //test
+                            Log.e("RelayValuesRealtime", String.valueOf(relayValue));
+
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            if(relayValue == 1){
+                                switch2.setChecked(true);
+                            } else {
+                                switch2.setChecked(false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+
+        socket.on("relay_0_data_2", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // Lấy giá trị cảm biến từ tham số args
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(args[0].toString());
+                            // Thực hiện các thao tác khác với đối tượng jsonObject
+                            String sensorValue = jsonObject.getString("value");
+                            int relayValue = Integer.parseInt(sensorValue);
+                            //test
+                            Log.e("RelayValuesRealtime", String.valueOf(relayValue));
+
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            if(relayValue == 1){
+                                switch3.setChecked(true);
+                            } else {
+                                switch3.setChecked(false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
+        socket.on("relay_0_data_3", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // Lấy giá trị cảm biến từ tham số args
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(args[0].toString());
+                            // Thực hiện các thao tác khác với đối tượng jsonObject
+                            String sensorValue = jsonObject.getString("value");
+                            int relayValue = Integer.parseInt(sensorValue);
+                            //test
+                            Log.e("RelayValuesRealtime", String.valueOf(relayValue));
+
+                            // Hiển thị đèn bật trên giao diện của ứng dụng
+                            if(relayValue == 1){
+                                switchFan.setChecked(true);
+                            } else {
+                                switchFan.setChecked(false);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         });
 

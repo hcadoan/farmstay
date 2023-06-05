@@ -7,7 +7,7 @@ public class RetrofitServer {
 
     private Retrofit retrofit;
     private RetrofitInterface retrofitInterface;
-    private String BASE_URL = "http://api.farmstays.me"; //server
+    private String BASE_URL = "https://farmstays.me/api/"; //server
 
     public RetrofitInterface Retrofit(){
         retrofit = new Retrofit.Builder()

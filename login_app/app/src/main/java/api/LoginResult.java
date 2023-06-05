@@ -9,7 +9,6 @@ public class LoginResult {
     private String email;
     private String username;
     private JsonObject data;
-    private String authenticate_jwt;
     private String msg;
     private String message;
     private String status;
@@ -31,13 +30,7 @@ public class LoginResult {
         this.username = username;
     }
 
-    public String getAuthenticate_jwt() {
-        return authenticate_jwt;
-    }
 
-    public void setAuthenticate_jwt(String authenticate_jwt) {
-        this.authenticate_jwt = authenticate_jwt;
-    }
 
     public String getMsg() {
         return msg;
@@ -82,7 +75,6 @@ public class LoginResult {
     @Override
     public String toString() {
         return "LoginResult{" +
-                "authenticate_jwt='" + authenticate_jwt + '\'' +
                 ", msg='" + msg + '\'' +
                 ", msg_vi='" + msg_vi + '\'' +
                 '}';

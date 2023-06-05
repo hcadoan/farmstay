@@ -104,6 +104,9 @@ public class FarmstayFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewPager_farmstay);
         tvMessage = view.findViewById(R.id.tvMessage);
 
+        tvMessage.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.INVISIBLE);
+
         ViewPagerAdapter_3 viewPagerAdapter_3 = new ViewPagerAdapter_3(getActivity(), getParentFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(viewPagerAdapter_3);
         tabLayout.setupWithViewPager(viewPager);

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -166,8 +167,9 @@ public class AccountFragment extends Fragment {
         layout_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-//                startActivity(intent);
+                String Url = "https://farmstays.me/";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Url));
+                startActivity(intent);
             }
         });
 
